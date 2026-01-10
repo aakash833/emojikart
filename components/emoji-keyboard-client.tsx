@@ -35,7 +35,10 @@ import { StructuredData } from "@/components/structured-data";
 import { HomePage } from "@/components/home-page";
 import { EmojiTooltip } from "@/components/emoji-tooltip";
 import { AdBanner } from "@/components/ad-banner";
-import AdUnit from "./ad-unit";
+import dynamic from "next/dynamic";
+const AdUnit = dynamic(() => import("../components/ad-unit"), {
+  ssr: false,
+});
 
 type EmojiSize = "S" | "M" | "L" | "XL" | "XXL";
 
@@ -632,7 +635,7 @@ export function EmojiKeyboardClient() {
         )}
 
         {/* Ads disabled - intentionally not rendering bottom sticky ad */}
-        <AdUnit />
+        {/* <AdUnit /> */}
       </div>
     </>
   );
