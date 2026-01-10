@@ -378,7 +378,7 @@ export function EmojiKeyboardClient() {
                         setSidebarOpen(false); // Close sidebar on mobile after selection
                       }}
                       className={cn(
-                        "w-full flex items-center gap-4 px-5 py-4 rounded-xl text-base font-medium transition-all duration-300 relative group",
+                        "cursor-pointer w-full flex items-center gap-4 px-5 py-4 rounded-xl text-base font-medium transition-all duration-300 relative group",
                         "hover:shadow-lg hover:scale-[1.02] hover:translate-x-1",
                         "active:scale-[0.98]",
                         selectedCategory === category &&
@@ -509,7 +509,7 @@ export function EmojiKeyboardClient() {
                 setIsDarkMode(!isDarkMode);
                 hapticClick();
               }}
-              className="ml-6 w-12 h-12 rounded-xl hover:bg-yellow-100 dark:hover:bg-yellow-900/30 active:scale-95 transition-all duration-200 border-2 border-yellow-200 dark:border-yellow-800 hover:border-yellow-400 dark:hover:border-yellow-600"
+              className="cursor-pointer ml-6 w-12 h-12 rounded-xl hover:bg-yellow-100 dark:hover:bg-yellow-900/30 active:scale-95 transition-all duration-200 border-2 border-yellow-200 dark:border-yellow-800 hover:border-yellow-400 dark:hover:border-yellow-600"
               aria-label="Toggle theme"
             >
               {isDarkMode ? (
