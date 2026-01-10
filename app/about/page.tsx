@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import AdUnit from "@/components/ad-unit";
 
 export const metadata: Metadata = {
   title: "About Us | Free Online Emoji Keyboard",
@@ -16,6 +17,7 @@ export default function AboutPage() {
         <h1 className="text-4xl font-bold mb-8 text-foreground">
           About Our Emoji Keyboard
         </h1>
+        <AdUnit />
 
         <div className="prose prose-lg dark:prose-invert max-w-none space-y-8">
           <section>

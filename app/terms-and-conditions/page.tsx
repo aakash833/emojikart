@@ -1,3 +1,4 @@
+import AdUnit from "@/components/ad-unit";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function TermsAndConditionsPage() {
         <h1 className="text-4xl font-bold mb-8 text-foreground">
           Terms and Conditions
         </h1>
+        <AdUnit />
         <div className="prose prose-lg dark:prose-invert max-w-none">
           <p className="text-muted-foreground mb-4">
             Last updated: {new Date().toLocaleDateString()}

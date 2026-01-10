@@ -1,3 +1,5 @@
+import AdUnit from "@/components/ad-unit";
+import { AdSenseAd } from "@/components/adsense-ad";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,6 +21,7 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-4xl font-bold mb-8 text-foreground">
           Privacy Policy
         </h1>
+        <AdUnit />
         <div className="prose prose-lg dark:prose-invert max-w-none">
           <p className="text-muted-foreground mb-4">
             Last updated: {new Date().toLocaleDateString()}

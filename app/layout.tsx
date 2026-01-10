@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import NavigationLoader from "@/components/navigation-loader";
 import "./globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -177,6 +178,7 @@ export default function RootLayout({
       </head>
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class">
+          <NavigationLoader />
           {children}
           <Footer />
           <Analytics />
