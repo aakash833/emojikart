@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import NavigationLoader from "@/components/navigation-loader";
+import { StructuredData } from "@/components/structured-data";
 import "./globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
       "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. ✂️ Copy and 📋 Paste Emoji 👍 No apps required",
     images: [
       {
-        url: "/og-image.png", // You should create this image
+        url: "/og-image.svg",
         width: 1200,
         height: 630,
         alt: "Emoji Keyboard",
@@ -77,7 +78,7 @@ export const metadata: Metadata = {
     title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
     description:
       "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more.",
-    images: ["/og-image.png"],
+    images: ["/og-image.svg"],
   },
   robots: {
     index: true,
@@ -143,6 +144,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="canonical" href="https://emojikart.com" />
+        <meta name="robots" content="index, follow" />
+        <link rel="preconnect" href="https://emojikart.com" />
+        <link rel="preload" href="/og-image.svg" as="image" />
         <link
           rel="icon"
           type="image/png"
@@ -170,6 +174,18 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Emoji Keyboard" />
+        <meta property="og:site_name" content="Emoji Keyboard Online 😊" />
+        {/* Open Graph / Twitter card image */}
+        <meta
+          property="og:image"
+          content="https://emojikart.com/og-image.svg"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          name="twitter:image"
+          content="https://emojikart.com/og-image.svg"
+        />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4360932072488893"
@@ -178,6 +194,31 @@ export default function RootLayout({
       </head>
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class">
+          {/* Organization + WebSite JSON-LD so search engines can pick up site name and logo */}
+          <StructuredData
+            type="Website"
+            data={{
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "Emoji Keyboard Online 😊",
+                  url: "https://emojikart.com",
+                  logo: "https://emojikart.com/logo.svg",
+                },
+                {
+                  "@type": "WebSite",
+                  name: "Emoji Keyboard Online 😊",
+                  url: "https://emojikart.com",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: "https://emojikart.com/?q={search_term_string}",
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+              ],
+            }}
+          />
           <NavigationLoader />
           {children}
           <Footer />

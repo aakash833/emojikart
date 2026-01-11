@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
+import { StructuredData } from "@/components/structured-data";
 
 export const metadata: Metadata = {
   title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
@@ -49,5 +50,46 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <EmojiKeyboardClient />;
+  return (
+    <>
+      <EmojiKeyboardClient />
+      {generateStructuredData()}
+    </>
+  );
+}
+
+// Add FAQ structured data for the homepage to help rich results in search
+export function generateStructuredData() {
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How do I copy an emoji?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Click or tap any emoji in the keyboard to copy it to your clipboard, then paste it wherever you like.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is this emoji keyboard free to use?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes — Emoji Keyboard is free to use. No account required.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do you store my data?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "We only store optional preferences locally in your browser. See our Privacy Policy for details.",
+        },
+      },
+    ],
+  };
+
+  return <StructuredData type="WebPage" data={faq} />;
 }

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)" />
+
+  <!-- Logo circle / mascot (based on public/logo.svg shapes) -->
+  <g transform="translate(200,90) scale(6)">
+    <path fill="#FFCC4D" d="M36 18c0 9.941-8.059 18-18 18S0 27.941 0 18 8.059 0 18 0s18 8.059 18 18"/>
+    <circle cx="7" cy="18" r="5" fill="#FF7892"/>
+    <circle cx="29" cy="18" r="5" fill="#FF7892"/>
+    <path fill="#664500" d="M27.335 21.629a.5.5 0 0 0-.635-.029c-.039.029-3.922 2.9-8.7 2.9-4.766 0-8.662-2.871-8.7-2.9a.5.5 0 0 0-.729.657C8.7 22.472 11.788 27.5 18 27.5s9.301-5.028 9.429-5.243a.5.5 0 0 0-.094-.628"/>
+  </g>
+
+  <g transform="translate(520,220)">
+    <text x="0" y="0" font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="64" fill="#ffffff" font-weight="700">Emoji Keyboard</text>
+    <text x="0" y="64" font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial" font-size="28" fill="#ffffff" opacity="0.9">Copy emojis instantly • Free online emoji picker</text>
+  </g>
+
+  <!-- subtle overlay/logo mark on the right -->
+  <g transform="translate(980,420) scale(3)">
+    <circle cx="6" cy="6" r="6" fill="#FFCC4D" />
+    <circle cx="2" cy="6" r="1.5" fill="#FF7892" />
+    <circle cx="10" cy="6" r="1.5" fill="#FF7892" />
+  </g>
+</svg>
