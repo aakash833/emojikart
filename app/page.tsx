@@ -3,7 +3,7 @@ import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
 import { StructuredData } from "@/components/structured-data";
 
 export const metadata: Metadata = {
-  title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
+  title: "Emoji Keyboard Online 😊 - Copy Emojis Instantly | Free Emoji Picker",
   description:
     "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. ✂️ Copy and 📋 Paste Emoji 👍 No apps required",
   keywords: [
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "emoji picker online",
   ],
   openGraph: {
-    title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
+    title: "Emoji Keyboard Online 😊 - Copy Emojis Instantly | Free Emoji Picker",
     description:
       "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more.",
     type: "website",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
+    title: "Emoji Keyboard Online 😊 - Copy Emojis Instantly | Free Emoji Picker",
     description:
       "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis.",
   },

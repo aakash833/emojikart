@@ -375,8 +375,9 @@ export function EmojiKeyboardClient() {
                     categorySlugMap[category] ||
                     category.toLowerCase().replace(/\s+/g, "-");
                   return (
-                    <button
+                    <Link
                       key={category}
+                      href={`/${categorySlug}`}
                       onClick={() => {
                         handleCategoryClick(category);
                         setSidebarOpen(false); // Close sidebar on mobile after selection
@@ -403,23 +404,7 @@ export function EmojiKeyboardClient() {
                         )}
                       />
                       <span className="text-left flex-1">{category}</span>
-                      <Link
-                        href={`/${categorySlug}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className={cn(
-                          "text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ml-2 px-2 py-1 rounded-md",
-                          "hover:bg-indigo-100 dark:hover:bg-indigo-900/50",
-                          selectedCategory === category &&
-                            !searchQuery &&
-                            pathname !== "/" &&
-                            "opacity-100"
-                        )}
-                        title={`View ${category} page for better SEO`}
-                        aria-label={`Open ${category} page`}
-                      >
-                        ↗
-                      </Link>
-                    </button>
+                    </Link>
                   );
                 })}
               </nav>

@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://emojikart.com"), // Replace with your actual domain
   title: {
     default:
-      "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
-    template: "%s | Emoji Keyboard",
+      "Emoji Keyboard Online 😊 - Copy Emojis Instantly | Free Emoji Picker",
+    template: "%s | Emoji Keyboard Online 😊",
   },
   description:
     "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. ✂️ Copy and 📋 Paste Emoji 👍 No apps required",
@@ -60,25 +60,25 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://emojikart.com", // Replace with your actual domain
-    siteName: "Emoji Keyboard",
-    title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
+    siteName: "Emoji Keyboard Online 😊",
+    title: "Emoji Keyboard Online 😊 - Copy Emojis Instantly | Free Emoji Picker",
     description:
       "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. ✂️ Copy and 📋 Paste Emoji 👍 No apps required",
     images: [
       {
-        url: "/og-image.svg",
-        width: 1200,
-        height: 630,
-        alt: "Emoji Keyboard",
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "Emoji Keyboard Online 😊",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Emoji Keyboard - Copy Emojis Instantly | Free Online Emoji Picker",
+    title: "Emoji Keyboard Online 😊 - Copy Emojis Instantly | Free Emoji Picker",
     description:
       "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more.",
-    images: ["/og-image.svg"],
+    images: ["/android-chrome-512x512.png"],
   },
   robots: {
     index: true,
@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     canonical: "https://emojikart.com", // Replace with your actual domain
   },
   generator: "Next.js",
-  applicationName: "Emoji Keyboard",
+  applicationName: "Emoji Keyboard Online 😊",
   referrer: "origin-when-cross-origin",
   icons: {
     icon: [
@@ -173,18 +173,19 @@ export default function RootLayout({
         <meta name="theme-color" content="#6366f1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Emoji Keyboard" />
+        <meta name="apple-mobile-web-app-title" content="Emoji Keyboard Online 😊" />
         <meta property="og:site_name" content="Emoji Keyboard Online 😊" />
         {/* Open Graph / Twitter card image */}
         <meta
           property="og:image"
-          content="https://emojikart.com/og-image.svg"
+          content="https://emojikart.com/android-chrome-512x512.png"
         />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:image:type" content="image/png" />
         <meta
           name="twitter:image"
-          content="https://emojikart.com/og-image.svg"
+          content="https://emojikart.com/android-chrome-512x512.png"
         />
         <script
           async
@@ -204,15 +205,27 @@ export default function RootLayout({
                   "@type": "Organization",
                   name: "Emoji Keyboard Online 😊",
                   url: "https://emojikart.com",
-                  logo: "https://emojikart.com/logo.svg",
+                  logo: {
+                    "@type": "ImageObject",
+                    url: "https://emojikart.com/android-chrome-512x512.png",
+                    width: 512,
+                    height: 512,
+                  },
+                  sameAs: [
+                    "https://emojikart.com"
+                  ],
                 },
                 {
                   "@type": "WebSite",
                   name: "Emoji Keyboard Online 😊",
+                  alternateName: "EmojiKart",
                   url: "https://emojikart.com",
                   potentialAction: {
                     "@type": "SearchAction",
-                    target: "https://emojikart.com/?q={search_term_string}",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: "https://emojikart.com/?q={search_term_string}"
+                    },
                     "query-input": "required name=search_term_string",
                   },
                 },
