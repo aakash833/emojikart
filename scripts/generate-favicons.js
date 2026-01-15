@@ -14,24 +14,59 @@ const sizes = [
   { size: 180, name: "apple-touch-icon.png" },
 ];
 
-const svgPath = path.join(__dirname, "../public/icon.svg");
+// Use favicon.svg as source (has transparent bg and border)
+const svgPath = path.join(__dirname, "../public/favicon.svg");
 const publicPath = path.join(__dirname, "../public");
 
 async function generateFavicons() {
   try {
+    // Check if SVG exists
+    if (!fs.existsSync(svgPath)) {
+      console.error(`SVG file not found at ${svgPath}`);
+      console.log("Using icon.svg as fallback...");
+      const fallbackPath = path.join(__dirname, "../public/icon.svg");
+      if (!fs.existsSync(fallbackPath)) {
+        console.error("No SVG favicon found!");
+        return;
+      }
+      svgPath = fallbackPath;
+    }
+
     const svgBuffer = fs.readFileSync(svgPath);
 
     for (const { size, name } of sizes) {
       await sharp(svgBuffer)
-        .resize(size, size)
-        .png()
+        .resize(size, size, {
+          fit: "contain",
+          background: { r: 0, g: 0, b: 0, alpha: 0 }, // Transparent background
+        })
+        .png({
+          quality: 100,
+          compressionLevel: 6, // Lower compression for better color preservation
+          palette: true, // Use palette mode for better color preservation
+        })
         .toFile(path.join(publicPath, name));
-      console.log(`Generated ${name}`);
+      console.log(`✅ Generated ${name} (${size}x${size})`);
     }
 
-    console.log("All favicons generated successfully!");
+    // Generate favicon.ico from 32x32 PNG
+    const favicon32Path = path.join(publicPath, "favicon-32x32.png");
+    if (fs.existsSync(favicon32Path)) {
+      await sharp(favicon32Path)
+        .resize(32, 32)
+        .toFile(path.join(publicPath, "favicon.ico"));
+      console.log("✅ Generated favicon.ico");
+    }
+
+    console.log("\n🎉 All favicons generated successfully!");
+    console.log("📝 Files generated:");
+    sizes.forEach(({ name }) => console.log(`   - ${name}`));
+    console.log("   - favicon.ico");
   } catch (error) {
-    console.error("Error generating favicons:", error);
+    console.error("❌ Error generating favicons:", error.message);
+    if (error.message.includes("sharp")) {
+      console.log("\n💡 Tip: Install sharp by running: npm install sharp --save-dev");
+    }
   }
 }
 

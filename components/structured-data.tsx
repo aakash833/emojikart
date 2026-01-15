@@ -21,10 +21,10 @@ export function StructuredData({ type, data }: StructuredDataProps) {
   const baseStructuredData = {
     "@context": "https://schema.org",
     "@type": type,
-    name: "Emoji Keyboard - Free Online Emoji Picker",
+    name: "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
     description:
-      "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. No apps required.",
-    url: "https://emojikart.com", // Replace with your actual domain
+      "Emoji keyboard online 😊 - Click to copy 🔥 emoji - Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. No apps required.",
+    url: "https://emojikart.com",
     applicationCategory: "UtilityApplication",
     operatingSystem: "Web",
     offers: {

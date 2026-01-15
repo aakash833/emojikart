@@ -45,22 +45,26 @@ export async function generateMetadata({
   const emojiCount = emojiData[categoryName]?.length || 0;
 
   return {
-    title: `${categoryName} Emojis - Copy ${emojiCount}+ Emojis Instantly | Free Online Emoji Keyboard`,
-    description: `Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. Free online emoji keyboard with instant copy and paste. No apps required.`,
+    title: `${categoryName} Emojis - Copy ${emojiCount}+ Emojis Instantly | Emoji keyboard online 😊 - Click to copy 🔥 emoji`,
+    description: `Emoji keyboard online 😊 - Click to copy 🔥 emoji - Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. Free online emoji keyboard with instant copy and paste. No apps required.`,
     keywords: [
       categoryName.toLowerCase(),
       "emojis",
       "emoji keyboard",
+      "emoji keyboard online",
+      "online emoji keyboard",
+      "free emoji keyboard",
       "copy emoji",
       "emoji picker",
+      "emoji picker online",
       "paste emoji",
       "copy paste emoji",
+      "emoji copy paste",
       "emoji for twitter",
       "emoji for facebook",
       "emoji for instagram",
       "emoji for whatsapp",
       "emoji for slack",
-      "free emoji keyboard",
       categoryName,
     ].join(", "),
     openGraph: {

@@ -31,6 +31,7 @@ import {
 import Script from "next/script";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { useTransition } from "react";
 import { StructuredData } from "@/components/structured-data";
 import { HomePage } from "@/components/home-page";
 import { EmojiTooltip } from "@/components/emoji-tooltip";
@@ -91,6 +92,7 @@ const slugToCategory: Record<string, string> = {
 export function EmojiKeyboardClient() {
   const router = useRouter();
   const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
   // Initialize category from URL if present
   const getInitialCategory = () => {
@@ -256,13 +258,12 @@ export function EmojiKeyboardClient() {
     setSearchQuery("");
     hapticCategoryChange();
 
-    // Update route for SEO (only if not on home page)
+    // Update route for SEO using startTransition for smooth navigation
     const slug = categoryToSlug[category];
-    if (slug && pathname !== "/") {
-      router.push(`/${slug}`, { scroll: false });
-    } else if (slug && pathname === "/") {
-      // If on home page, navigate to category page
-      router.push(`/${slug}`, { scroll: false });
+    if (slug) {
+      startTransition(() => {
+        router.push(`/${slug}`, { scroll: false });
+      });
     }
 
     // Scroll to top when changing category
@@ -375,9 +376,8 @@ export function EmojiKeyboardClient() {
                     categorySlugMap[category] ||
                     category.toLowerCase().replace(/\s+/g, "-");
                   return (
-                    <Link
+                    <button
                       key={category}
-                      href={`/${categorySlug}`}
                       onClick={() => {
                         handleCategoryClick(category);
                         setSidebarOpen(false); // Close sidebar on mobile after selection
@@ -404,7 +404,23 @@ export function EmojiKeyboardClient() {
                         )}
                       />
                       <span className="text-left flex-1">{category}</span>
-                    </Link>
+                      <Link
+                        href={`/${categorySlug}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className={cn(
+                          "text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ml-2 px-2 py-1 rounded-md",
+                          "hover:bg-indigo-100 dark:hover:bg-indigo-900/50",
+                          selectedCategory === category &&
+                            !searchQuery &&
+                            pathname !== "/" &&
+                            "opacity-100"
+                        )}
+                        title={`View ${category} page for better SEO`}
+                        aria-label={`Open ${category} page`}
+                      >
+                        ↗
+                      </Link>
+                    </button>
                   );
                 })}
               </nav>
@@ -512,8 +528,17 @@ export function EmojiKeyboardClient() {
           {/* Emoji Grid - Scrollable Content Only */}
           <div
             ref={emojiGridRef}
-            className="flex-1 overflow-y-auto mt-[88px] md:mt-[88px]"
+            className="flex-1 overflow-y-auto mt-[88px] md:mt-[88px] relative"
           >
+            {/* Loading overlay for smooth transitions */}
+            {isPending && (
+              <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-10 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin border-primary" />
+                  <span className="text-xs text-muted-foreground">Loading...</span>
+                </div>
+              </div>
+            )}
             <div className="p-6">
               {/* Show Home Page if on "/" route and no search query */}
               {pathname === "/" && !searchQuery ? (

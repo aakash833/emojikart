@@ -1,13 +1,24 @@
 {
-  "name": "Emoji Keyboard Online 😊 - Copy Emojis Instantly",
-  "short_name": "Emoji Keyboard 😊",
-  "description": "Free online emoji keyboard with thousands of emojis. Copy emojis to your clipboard instantly!",
+  "name": "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
+  "short_name": "Emoji keyboard online 😊",
+  "description": "Emoji keyboard online 😊 - Free online emoji keyboard with thousands of emojis. Copy emojis to your clipboard instantly!",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#6366f1",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
     {
       "src": "/favicon-16x16.png",
       "sizes": "16x16",
@@ -21,22 +32,19 @@
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
-    },
-    {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
     }
   ],
   "categories": ["utilities", "productivity"],
