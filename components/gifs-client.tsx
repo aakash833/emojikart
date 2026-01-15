@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Copy, Download, TrendingUp, Filter, Loader2 } from "lucide-react";
@@ -29,29 +29,41 @@ export function GifsClient() {
   const [downloadingGifId, setDownloadingGifId] = useState<string | null>(null);
   const [gifs, setGifs] = useState<GIF[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const observerTarget = useRef<HTMLDivElement>(null);
+  const LIMIT = 25;
 
-  // Load GIFs based on search or category
+  // Load GIFs based on search or category (initial load)
   useEffect(() => {
     const loadGIFs = async () => {
       setLoading(true);
+      setOffset(0);
+      setGifs([]);
+      setHasMore(true);
+
       try {
-        let giphyGIFs: GiphyGIF[] = [];
+        let result: { gifs: GiphyGIF[]; hasMore: boolean; totalCount: number };
 
         if (searchQuery.trim()) {
           // Search GIFs
-          giphyGIFs = await searchGiphyGIFs(searchQuery, 25);
+          result = await searchGiphyGIFs(searchQuery, LIMIT, 0);
         } else if (selectedCategory !== "All") {
           // Get by category
-          giphyGIFs = await getGiphyGIFsByCategory(selectedCategory, 25);
+          result = await getGiphyGIFsByCategory(selectedCategory, LIMIT, 0);
         } else {
           // Default: show trending
-          const trending = await getTrendingGiphyGIFs(25);
-          giphyGIFs = trending;
+          result = await getTrendingGiphyGIFs(LIMIT, 0);
         }
 
-        const convertedGIFs = giphyGIFs.map(convertGiphyToGIF);
+        const convertedGIFs = result.gifs.map(convertGiphyToGIF);
         setGifs(convertedGIFs);
+        setHasMore(result.hasMore);
+        setTotalCount(result.totalCount);
+        setOffset(LIMIT);
       } catch (error) {
         console.error("Error loading GIFs:", error);
         setGifs([]);
@@ -68,6 +80,57 @@ export function GifsClient() {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, selectedCategory]);
+
+  // Load more GIFs when scrolling
+  const loadMoreGIFs = useCallback(async () => {
+    if (loadingMore || !hasMore || loading) return;
+
+    setLoadingMore(true);
+    try {
+      let result: { gifs: GiphyGIF[]; hasMore: boolean; totalCount: number };
+
+      if (searchQuery.trim()) {
+        result = await searchGiphyGIFs(searchQuery, LIMIT, offset);
+      } else if (selectedCategory !== "All") {
+        result = await getGiphyGIFsByCategory(selectedCategory, LIMIT, offset);
+      } else {
+        result = await getTrendingGiphyGIFs(LIMIT, offset);
+      }
+
+      const convertedGIFs = result.gifs.map(convertGiphyToGIF);
+      setGifs((prev) => [...prev, ...convertedGIFs]);
+      setHasMore(result.hasMore);
+      setTotalCount(result.totalCount);
+      setOffset((prevOffset) => prevOffset + LIMIT);
+    } catch (error) {
+      console.error("Error loading more GIFs:", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [searchQuery, selectedCategory, offset, hasMore, loadingMore, loading]);
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
+          loadMoreGIFs();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasMore, loadingMore, loading, loadMoreGIFs]);
 
   const handleCopyGif = async (gif: GIF) => {
     try {
@@ -127,7 +190,7 @@ export function GifsClient() {
     <div className="w-full">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* SEO Content Section */}
-        <div className="mb-8 prose prose-lg dark:prose-invert max-w-none">
+        <div className="prose prose-lg dark:prose-invert max-w-none">
           <h1 className="text-4xl font-bold mb-4 flex items-center gap-2">
             <Search className="w-8 h-8 text-indigo-500" />
             GIF Finder - Search & Find GIFs Online Free
@@ -157,7 +220,7 @@ export function GifsClient() {
       </div>
 
       {/* Search and Filters - Sticky (outside container for proper positioning) */}
-      <div className="w-full bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
+      <div className="w-full bg-background/95 border-b">
         <div className="container mx-auto px-4 py-4 max-w-7xl">
           <div className="space-y-4">
             {/* Search Bar */}
@@ -203,7 +266,7 @@ export function GifsClient() {
         {/* Results Count */}
         {!initialLoad && (
           <div className="mb-4 text-sm text-muted-foreground">
-            Found {gifs.length} GIF{gifs.length !== 1 ? "s" : ""}
+            Showing {gifs.length} of {totalCount > 0 ? totalCount : "many"} GIF{totalCount !== 1 ? "s" : ""}
           </div>
         )}
 
@@ -216,94 +279,109 @@ export function GifsClient() {
 
         {/* GIF Grid */}
         {!loading && gifs.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {gifs.map((gif) => (
-              <Card
-                key={gif.id}
-                className="group hover:shadow-lg transition-all duration-300 overflow-hidden"
-              >
-                <CardContent className="p-0">
-                  <div className="relative aspect-square bg-muted overflow-hidden">
-                    {/* GIF Preview - Using higher quality preview */}
-                    <img
-                      src={gif.previewUrl}
-                      alt={gif.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                      title={gif.title}
-                    />
-                    {/* Overlay on Hover */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => handleCopyGif(gif)}
-                        className={cn(
-                          "cursor-pointer",
-                          copiedGifId === gif.id && "bg-green-600 hover:bg-green-700"
-                        )}
-                      >
-                        <Copy className="w-4 h-4 mr-2" />
-                        {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleDownloadGif(gif)}
-                        disabled={downloadingGifId === gif.id}
-                        className={cn(
-                          "cursor-pointer",
-                          downloadingGifId === gif.id && "opacity-50"
-                        )}
-                      >
-                        {downloadingGifId === gif.id ? (
-                          <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Downloading...
-                          </>
-                        ) : (
-                          <>
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                    {/* Badges */}
-                    <div className="absolute top-2 left-2 flex gap-2">
-                      {gif.trending && (
-                        <span className="px-2 py-1 bg-orange-500 text-white text-xs font-medium rounded flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3" />
-                          Trending
-                        </span>
-                      )}
-                      {gif.popular && (
-                        <span className="px-2 py-1 bg-indigo-500 text-white text-xs font-medium rounded">
-                          Popular
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-semibold text-sm mb-1 line-clamp-1">{gif.title}</h3>
-                    <div className="flex flex-wrap gap-1">
-                      {gif.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded"
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {gifs.map((gif) => (
+                <Card
+                  key={gif.id}
+                  className="group hover:shadow-lg transition-all duration-300 overflow-hidden"
+                >
+                  <CardContent className="p-0">
+                    <div className="relative aspect-square bg-muted overflow-hidden">
+                      {/* GIF Preview - Using higher quality preview */}
+                      <img
+                        src={gif.previewUrl}
+                        alt={gif.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                        title={gif.title}
+                      />
+                      {/* Overlay on Hover */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => handleCopyGif(gif)}
+                          className={cn(
+                            "cursor-pointer",
+                            copiedGifId === gif.id && "bg-green-600 hover:bg-green-700"
+                          )}
                         >
-                          #{tag}
-                        </span>
-                      ))}
+                          <Copy className="w-4 h-4 mr-2" />
+                          {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleDownloadGif(gif)}
+                          disabled={downloadingGifId === gif.id}
+                          className={cn(
+                            "cursor-pointer",
+                            downloadingGifId === gif.id && "opacity-50"
+                          )}
+                        >
+                          {downloadingGifId === gif.id ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Downloading...
+                            </>
+                          ) : (
+                            <>
+                              <Download className="w-4 h-4 mr-2" />
+                              Download
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      {/* Badges */}
+                      <div className="absolute top-2 left-2 flex gap-2">
+                        {gif.trending && (
+                          <span className="px-2 py-1 bg-orange-500 text-white text-xs font-medium rounded flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3" />
+                            Trending
+                          </span>
+                        )}
+                        {gif.popular && (
+                          <span className="px-2 py-1 bg-indigo-500 text-white text-xs font-medium rounded">
+                            Popular
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
+                    <div className="p-3">
+                      <h3 className="font-semibold text-sm mb-1 line-clamp-1">{gif.title}</h3>
+                      <div className="flex flex-wrap gap-1">
+                        {gif.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            {/* Infinite Scroll Trigger */}
+            <div ref={observerTarget} className="h-20 flex items-center justify-center">
+              {loadingMore && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
+                  <span>Loading more GIFs...</span>
+                </div>
+              )}
+              {!hasMore && gifs.length > 0 && (
+                <p className="text-sm text-muted-foreground">No more GIFs to load</p>
+              )}
+            </div>
+          </>
+        ) : !loading ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">No GIFs found. Try a different search term.</p>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

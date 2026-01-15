@@ -50,16 +50,17 @@ export interface GiphyResponse {
   };
 }
 
-// Search GIFs
+// Search GIFs with pagination support
 export async function searchGiphyGIFs(
   query: string,
-  limit: number = 25
-): Promise<GiphyGIF[]> {
+  limit: number = 25,
+  offset: number = 0
+): Promise<{ gifs: GiphyGIF[]; hasMore: boolean; totalCount: number }> {
   try {
     // Request higher quality images by not limiting size
     const url = `${GIPHY_BASE_URL}/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(
       query
-    )}&limit=${limit}&rating=g&lang=en`;
+    )}&limit=${limit}&offset=${offset}&rating=g&lang=en`;
     
     const response = await fetch(url);
     if (!response.ok) {
@@ -67,19 +68,27 @@ export async function searchGiphyGIFs(
     }
     
     const data: GiphyResponse = await response.json();
-    return data.data || [];
+    const gifs = data.data || [];
+    const hasMore = (offset + limit) < (data.pagination?.total_count || 0);
+    
+    return {
+      gifs,
+      hasMore,
+      totalCount: data.pagination?.total_count || 0,
+    };
   } catch (error) {
     console.error("Error fetching GIFs:", error);
-    return [];
+    return { gifs: [], hasMore: false, totalCount: 0 };
   }
 }
 
-// Get trending GIFs
+// Get trending GIFs with pagination support
 export async function getTrendingGiphyGIFs(
-  limit: number = 25
-): Promise<GiphyGIF[]> {
+  limit: number = 25,
+  offset: number = 0
+): Promise<{ gifs: GiphyGIF[]; hasMore: boolean; totalCount: number }> {
   try {
-    const url = `${GIPHY_BASE_URL}/trending?api_key=${GIPHY_API_KEY}&limit=${limit}&rating=g`;
+    const url = `${GIPHY_BASE_URL}/trending?api_key=${GIPHY_API_KEY}&limit=${limit}&offset=${offset}&rating=g`;
     
     const response = await fetch(url);
     if (!response.ok) {
@@ -87,18 +96,26 @@ export async function getTrendingGiphyGIFs(
     }
     
     const data: GiphyResponse = await response.json();
-    return data.data || [];
+    const gifs = data.data || [];
+    const hasMore = (offset + limit) < (data.pagination?.total_count || 0);
+    
+    return {
+      gifs,
+      hasMore,
+      totalCount: data.pagination?.total_count || 0,
+    };
   } catch (error) {
     console.error("Error fetching trending GIFs:", error);
-    return [];
+    return { gifs: [], hasMore: false, totalCount: 0 };
   }
 }
 
-// Get GIFs by category
+// Get GIFs by category with pagination support
 export async function getGiphyGIFsByCategory(
   category: string,
-  limit: number = 25
-): Promise<GiphyGIF[]> {
+  limit: number = 25,
+  offset: number = 0
+): Promise<{ gifs: GiphyGIF[]; hasMore: boolean; totalCount: number }> {
   try {
     // Map our categories to Giphy search terms
     const categoryMap: Record<string, string> = {
@@ -117,10 +134,10 @@ export async function getGiphyGIFsByCategory(
     };
 
     const searchTerm = categoryMap[category] || category.toLowerCase();
-    return await searchGiphyGIFs(searchTerm, limit);
+    return await searchGiphyGIFs(searchTerm, limit, offset);
   } catch (error) {
     console.error("Error fetching category GIFs:", error);
-    return [];
+    return { gifs: [], hasMore: false, totalCount: 0 };
   }
 }
 

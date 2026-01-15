@@ -359,7 +359,7 @@ export function EmojiKeyboardClient() {
             <Link href="/" className="w-full flex items-center gap-3">
               <div className="w-full text-2xl font-bold text-foreground flex items-center justify-between">
                 <div> emojiKart</div>
-                <div className="text-3xl">😊</div>
+                <div className="text-3xl">🔥</div>
               </div>
             </Link>
             {/* Mobile-only close button inside the drawer */}
