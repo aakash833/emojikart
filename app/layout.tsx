@@ -153,7 +153,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="canonical" href="https://emojikart.com" />
         <meta name="robots" content="index, follow" />
@@ -226,7 +226,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         ></script>
       </head>
-      <body className={`font-sans antialiased`}>
+      <body className={`font-sans antialiased`} suppressHydrationWarning>
         <ThemeProvider attribute="class">
           {/* Organization + WebSite JSON-LD so search engines can pick up site name and logo */}
           <StructuredData
@@ -275,8 +275,10 @@ export default function RootLayout({
             }}
           />
           <NavigationLoader />
-          {children}
-          <Footer />
+          <div className="flex flex-col min-h-screen">
+            {children}
+            <Footer />
+          </div>
           <Analytics />
         </ThemeProvider>
       </body>

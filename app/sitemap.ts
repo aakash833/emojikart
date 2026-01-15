@@ -34,6 +34,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  // Feature pages (high priority for SEO)
+  const featurePages = [
+    { url: `${baseUrl}/emoji-generator`, priority: 0.9 },
+    { url: `${baseUrl}/emoji-meanings`, priority: 0.9 },
+    { url: `${baseUrl}/emoji-trends`, priority: 0.9 },
+    { url: `${baseUrl}/gifs`, priority: 0.9 },
+    { url: `${baseUrl}/gifs/trending`, priority: 0.85 },
+    { url: `${baseUrl}/gifs/categories`, priority: 0.85 },
+    { url: `${baseUrl}/blog`, priority: 0.85 },
+  ].map((page) => ({
+    url: page.url,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: page.priority as 0.9 | 0.85,
+  }));
+
+  // Blog posts (high priority for SEO and content)
+  const blogPosts = [
+    { url: `${baseUrl}/blog/complete-guide-to-emoji-meanings-2025`, priority: 0.9 },
+    { url: `${baseUrl}/blog/best-emoji-combinations-for-social-media`, priority: 0.9 },
+    { url: `${baseUrl}/blog/emoji-trends-2025-whats-hot`, priority: 0.9 },
+    { url: `${baseUrl}/blog/how-to-use-emojis-in-professional-communication`, priority: 0.85 },
+    { url: `${baseUrl}/blog/emoji-psychology-why-we-love-emojis`, priority: 0.85 },
+    { url: `${baseUrl}/blog/emoji-etiquette-dos-and-donts`, priority: 0.85 },
+    { url: `${baseUrl}/blog/emoji-history-evolution-of-digital-expression`, priority: 0.85 },
+    { url: `${baseUrl}/blog/emoji-marketing-how-brands-use-emojis`, priority: 0.85 },
+    { url: `${baseUrl}/blog/emoji-accessibility-making-digital-communication-inclusive`, priority: 0.85 },
+  ].map((post) => ({
+    url: post.url,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: post.priority as 0.9 | 0.85,
+  }));
+
   // Required pages
   const requiredPages = [
     { url: `${baseUrl}/privacy-policy`, priority: 0.5 },
@@ -54,6 +88,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
+    ...featurePages,
+    ...blogPosts,
     ...categoryPages,
     ...requiredPages,
     ...emojiPages.slice(0, 1000), // Limit to first 1000 for performance, Google will crawl more

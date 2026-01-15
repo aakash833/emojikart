@@ -167,7 +167,7 @@ export function EmojiCategoryPage({ category, slug }: EmojiCategoryPageProps) {
                     hapticClick();
                   }}
                   className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-bold transition-all",
+                    "px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer",
                     emojiSize === size
                       ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md"
                       : "bg-muted text-muted-foreground hover:bg-accent"

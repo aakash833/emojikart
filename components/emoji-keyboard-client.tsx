@@ -27,6 +27,10 @@ import {
   Sparkles,
   Menu,
   X,
+  Wand2,
+  BookOpen,
+  TrendingUp,
+  Image,
 } from "lucide-react";
 import Script from "next/script";
 import Link from "next/link";
@@ -40,6 +44,19 @@ import dynamic from "next/dynamic";
 const AdUnit = dynamic(() => import("../components/ad-unit"), {
   ssr: false,
 });
+// Import feature components for consistent layout
+const GifsClient = dynamic(() => import("../components/gifs-client").then(m => ({ default: m.GifsClient })), { ssr: false });
+const TrendingGifsClient = dynamic(() => import("../components/trending-gifs-client").then(m => ({ default: m.TrendingGifsClient })), { ssr: false });
+const GifCategoriesClient = dynamic(() => import("../components/gif-categories-client").then(m => ({ default: m.GifCategoriesClient })), { ssr: false });
+const EmojiGeneratorClient = dynamic(() => import("../components/emoji-generator-client").then(m => ({ default: m.EmojiGeneratorClient })), { ssr: false });
+const EmojiMeaningsClient = dynamic(() => import("../components/emoji-meanings-client").then(m => ({ default: m.EmojiMeaningsClient })), { ssr: false });
+const EmojiTrendsClient = dynamic(() => import("../components/emoji-trends-client").then(m => ({ default: m.EmojiTrendsClient })), { ssr: false });
+const BlogPageClient = dynamic(() => import("../components/blog-page-client").then(m => ({ default: m.BlogPageClient })), { ssr: false });
+const BlogPostClient = dynamic(() => import("../components/blog-post-client").then(m => ({ default: m.BlogPostClient })), { ssr: false });
+const AboutPageClient = dynamic(() => import("../components/about-page-client").then(m => ({ default: m.AboutPageClient })), { ssr: false });
+const ContactPageClient = dynamic(() => import("../components/contact-page-client").then(m => ({ default: m.ContactPageClient })), { ssr: false });
+const PrivacyPolicyClient = dynamic(() => import("../components/privacy-policy-client").then(m => ({ default: m.PrivacyPolicyClient })), { ssr: false });
+const TermsAndConditionsClient = dynamic(() => import("../components/terms-and-conditions-client").then(m => ({ default: m.TermsAndConditionsClient })), { ssr: false });
 
 type EmojiSize = "S" | "M" | "L" | "XL" | "XXL";
 
@@ -94,6 +111,11 @@ export function EmojiKeyboardClient() {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
+  // Extract blog slug from pathname if it's a blog post
+  const blogSlug = pathname?.startsWith("/blog/") && pathname !== "/blog" 
+    ? pathname.replace("/blog/", "") 
+    : null;
+
   // Initialize category from URL if present
   const getInitialCategory = () => {
     if (pathname && pathname !== "/") {
@@ -106,21 +128,26 @@ export function EmojiKeyboardClient() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     getInitialCategory()
   );
-  const [emojiSize, setEmojiSize] = useState<EmojiSize>(() => {
-    try {
-      const s = localStorage.getItem("emojiSize");
-      if (s && ["S", "M", "L", "XL", "XXL"].includes(s)) return s as EmojiSize;
-    } catch {}
-    return "M";
-  });
+  // Initialize with default values to prevent hydration mismatch
+  // Will be updated from localStorage after hydration
+  const [emojiSize, setEmojiSize] = useState<EmojiSize>("M");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  
+  // Load from localStorage after hydration (client-side only)
+  useEffect(() => {
     try {
-      return localStorage.getItem("theme") === "dark";
-    } catch {
-      return false;
-    }
-  });
+      const savedSize = localStorage.getItem("emojiSize");
+      if (savedSize && ["S", "M", "L", "XL", "XXL"].includes(savedSize)) {
+        setEmojiSize(savedSize as EmojiSize);
+      }
+    } catch {}
+    
+    try {
+      const savedTheme = localStorage.getItem("theme");
+      setIsDarkMode(savedTheme === "dark");
+    } catch {}
+  }, []);
   const [copiedEmoji, setCopiedEmoji] = useState<{
     emoji: string;
     name: string;
@@ -259,10 +286,12 @@ export function EmojiKeyboardClient() {
     hapticCategoryChange();
 
     // Update route for SEO using startTransition for smooth navigation
+    // Use replace instead of push to avoid adding to history stack
     const slug = categoryToSlug[category];
     if (slug) {
       startTransition(() => {
-        router.push(`/${slug}`, { scroll: false });
+        // Use router.replace to prevent full page reload
+        router.replace(`/${slug}`, { scroll: false });
       });
     }
 
@@ -305,7 +334,7 @@ export function EmojiKeyboardClient() {
 
       {/* Google AdSense is disabled while we don't serve ads. */}
 
-      <div className="flex h-screen bg-background overflow-hidden">
+      <div className="flex min-h-screen bg-background">
         {/* Mobile Overlay */}
         {sidebarOpen && (
           <div
@@ -318,7 +347,7 @@ export function EmojiKeyboardClient() {
         {/* Left Sidebar / Mobile Drawer */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-screen border-r border-border bg-gradient-to-b from-card to-card/95 flex flex-col shadow-lg z-40 transition-transform duration-300 ease-in-out",
+            "fixed left-0 top-0 h-screen border-r border-border bg-gradient-to-b from-card to-card/95 flex flex-col shadow-lg z-40 transition-transform duration-300 ease-in-out overflow-hidden",
             // Desktop: fixed width sidebar; Mobile: full-width drawer
             "w-full md:w-72",
             // When closed on mobile, hide it by translating left
@@ -351,12 +380,143 @@ export function EmojiKeyboardClient() {
           </div> */}
 
           {/* Categories Section - Scrollable */}
-          <div className="flex-1 overflow-y-auto min-h-0">
-            <div className="p-5">
-              <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
-                Categories
-              </h2>
-              <nav className="space-y-2">
+          <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain pb-2">
+            <div className="p-5 pb-4 space-y-6">
+              {/* Tools & Features Section */}
+              <div>
+                <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                  Tools & Features
+                </h2>
+                <nav className="space-y-2">
+                  {/* <Link
+                    href="/emoji-generator"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      startTransition(() => {
+                        router.replace("/emoji-generator", { scroll: false });
+                      });
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                      pathname === "/emoji-generator" && "bg-indigo-100 dark:bg-indigo-900/30"
+                    )}
+                  >
+                    <Wand2 className="w-4 h-4" />
+                    <span>Emoji Generator</span>
+                  </Link> */}
+                  {/* <Link
+                    href="/emoji-meanings"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      startTransition(() => {
+                        router.replace("/emoji-meanings", { scroll: false });
+                      });
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                      pathname === "/emoji-meanings" && "bg-indigo-100 dark:bg-indigo-900/30"
+                    )}
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    <span>Emoji Meanings</span>
+                  </Link> */}
+                  {/* <Link
+                    href="/emoji-trends"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      startTransition(() => {
+                        router.replace("/emoji-trends", { scroll: false });
+                      });
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                      pathname === "/emoji-trends" && "bg-indigo-100 dark:bg-indigo-900/30"
+                    )}
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    <span>Emoji Trends</span>
+                  </Link> */}
+                  <Link
+                    href="/blog"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      startTransition(() => {
+                        router.replace("/blog", { scroll: false });
+                      });
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                      pathname === "/blog" && "bg-indigo-100 dark:bg-indigo-900/30"
+                    )}
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    <span>Blog</span>
+                  </Link>
+                  <Link
+                    href="/gifs"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      startTransition(() => {
+                        router.replace("/gifs", { scroll: false });
+                      });
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                      pathname === "/gifs" && "bg-indigo-100 dark:bg-indigo-900/30"
+                    )}
+                  >
+                    <Image className="w-4 h-4" />
+                    <span>GIF Search</span>
+                  </Link>
+                  <Link
+                    href="/gifs/trending"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      startTransition(() => {
+                        router.replace("/gifs/trending", { scroll: false });
+                      });
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                      pathname === "/gifs/trending" && "bg-indigo-100 dark:bg-indigo-900/30"
+                    )}
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    <span>Trending GIFs</span>
+                  </Link>
+                </nav>
+              </div>
+
+              {/* Categories Section */}
+              <div>
+                <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                  Categories
+                </h2>
+                <nav className="space-y-2">
                 {categories.map((category) => {
                   const Icon =
                     categoryIcons[category as keyof typeof categoryIcons];
@@ -378,7 +538,9 @@ export function EmojiKeyboardClient() {
                   return (
                     <button
                       key={category}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         handleCategoryClick(category);
                         setSidebarOpen(false); // Close sidebar on mobile after selection
                       }}
@@ -406,7 +568,11 @@ export function EmojiKeyboardClient() {
                       <span className="text-left flex-1">{category}</span>
                       <Link
                         href={`/${categorySlug}`}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCategoryClick(category);
+                        }}
                         className={cn(
                           "text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ml-2 px-2 py-1 rounded-md",
                           "hover:bg-indigo-100 dark:hover:bg-indigo-900/50",
@@ -424,11 +590,12 @@ export function EmojiKeyboardClient() {
                   );
                 })}
               </nav>
+              </div>
             </div>
           </div>
 
           {/* Emoji Size Section - Fixed at Bottom */}
-          <div className="p-5 border-t border-border bg-gradient-to-t from-muted/30 to-transparent flex-shrink-0">
+          <div className="p-5 border-t border-border bg-gradient-to-t from-muted/30 to-transparent flex-shrink-0 sticky bottom-0 z-10">
             <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
               Emoji Size
             </h2>
@@ -438,7 +605,7 @@ export function EmojiKeyboardClient() {
                   key={size}
                   onClick={() => handleSizeChange(size)}
                   className={cn(
-                    "flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-300",
+                    "flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer",
                     "hover:scale-105 hover:shadow-md active:scale-95",
                     emojiSize === size
                       ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/50 scale-105"
@@ -453,7 +620,7 @@ export function EmojiKeyboardClient() {
         </aside>
 
         {/* Main Content - With Left Margin for Fixed Sidebar */}
-        <main className="flex-1 flex flex-col overflow-hidden md:ml-72">
+        <main className="flex-1 flex flex-col md:ml-72 min-h-screen">
           {/* Header - Fixed */}
           <header
             ref={headerRef}
@@ -528,7 +695,7 @@ export function EmojiKeyboardClient() {
           {/* Emoji Grid - Scrollable Content Only */}
           <div
             ref={emojiGridRef}
-            className="flex-1 overflow-y-auto mt-[88px] md:mt-[88px] relative"
+            className="flex-1 overflow-y-auto mt-[64px] md:mt-[88px] mb-4 md:mb-0 relative overscroll-contain"
           >
             {/* Loading overlay for smooth transitions */}
             {isPending && (
@@ -540,12 +707,36 @@ export function EmojiKeyboardClient() {
               </div>
             )}
             <div className="p-6">
-              {/* Show Home Page if on "/" route and no search query */}
+              {/* Route-based content rendering */}
               {pathname === "/" && !searchQuery ? (
                 <HomePage
                   onEmojiClick={handleEmojiClick}
                   copiedEmoji={copiedEmoji}
                 />
+              ) : pathname === "/blog" ? (
+                <BlogPageClient />
+              ) : blogSlug ? (
+                <BlogPostClient slug={blogSlug} />
+              ) : pathname === "/gifs" ? (
+                <GifsClient />
+              ) : pathname === "/gifs/trending" ? (
+                <TrendingGifsClient />
+              ) : pathname === "/gifs/categories" ? (
+                <GifCategoriesClient />
+              ) : pathname === "/emoji-generator" ? (
+                <EmojiGeneratorClient />
+              ) : pathname === "/emoji-meanings" ? (
+                <EmojiMeaningsClient />
+              ) : pathname === "/emoji-trends" ? (
+                <EmojiTrendsClient />
+              ) : pathname === "/about" ? (
+                <AboutPageClient />
+              ) : pathname === "/contact" ? (
+                <ContactPageClient />
+              ) : pathname === "/privacy-policy" ? (
+                <PrivacyPolicyClient />
+              ) : pathname === "/terms-and-conditions" ? (
+                <TermsAndConditionsClient />
               ) : (
                 <>
                   {/* Sticky Category Header */}

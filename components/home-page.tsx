@@ -5,6 +5,7 @@ import { emojiData } from "@/lib/emoji-data"
 import { hapticCopy } from "@/lib/haptics"
 import { EmojiCopyPopup } from "@/components/emoji-copy-popup"
 import { cn } from "@/lib/utils"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   TrendingUp,
   Clock,
@@ -14,8 +15,13 @@ import {
   Star,
   ArrowRight,
   RefreshCw,
+  Wand2,
+  BookOpen,
+  FileText,
+  Image,
 } from "lucide-react"
 import Link from "next/link"
+import { getFeaturedPosts } from "@/lib/blog-data"
 import type { EmojiWithCategory } from "@/lib/search-utils"
 import { EmojiTooltip } from "@/components/emoji-tooltip"
 
@@ -48,6 +54,7 @@ export function HomePage({ onEmojiClick, copiedEmoji }: HomePageProps) {
   const [recentEmojis, setRecentEmojis] = useState<EmojiWithCategory[]>([])
   const [emojiOfTheDay, setEmojiOfTheDay] = useState<EmojiWithCategory | null>(null)
   const [randomEmojis, setRandomEmojis] = useState<EmojiWithCategory[]>([])
+  const featuredBlogs = getFeaturedPosts().slice(0, 3)
 
   // Load recent emojis from localStorage
   useEffect(() => {
@@ -257,7 +264,7 @@ export function HomePage({ onEmojiClick, copiedEmoji }: HomePageProps) {
           </div>
           <button
             onClick={generateRandomEmojis}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-accent transition-colors text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-accent transition-colors text-sm font-medium cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Shuffle</span>
@@ -279,6 +286,157 @@ export function HomePage({ onEmojiClick, copiedEmoji }: HomePageProps) {
               </button>
             </EmojiTooltip>
           ))}
+        </div>
+      </section>
+
+      {/* Featured Blog Posts */}
+      {featuredBlogs.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <FileText className="w-6 h-6 text-indigo-500" />
+              Latest Blog Posts
+            </h2>
+            <Link
+              href="/blog"
+              className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+            >
+              View all <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            {featuredBlogs.map((blog) => (
+              <Link
+                key={blog.slug}
+                href={`/blog/${blog.slug}`}
+                className="group"
+              >
+                <Card className="h-full hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-md text-xs font-medium">
+                        {blog.category}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {blog.readTime} min read
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+                      {blog.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+                      {blog.description}
+                    </p>
+                    <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium group-hover:gap-3 transition-all">
+                      Read article <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Features Section */}
+      <section>
+        <h2 className="text-2xl font-bold text-foreground mb-4">Tools & Features</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Link
+            href="/emoji-generator"
+            className="group p-6 rounded-xl bg-card border border-border hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-200"
+          >
+            <Wand2 className="w-8 h-8 text-indigo-500 mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              Emoji Generator
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Create custom emoji combinations and generate unique emoji art
+            </p>
+            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+              Try it now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/emoji-meanings"
+            className="group p-6 rounded-xl bg-card border border-border hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-200"
+          >
+            <BookOpen className="w-8 h-8 text-purple-500 mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              Emoji Meanings
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Learn what emojis mean and how to use them correctly
+            </p>
+            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+              Explore meanings <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/emoji-trends"
+            className="group p-6 rounded-xl bg-card border border-border hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-200"
+          >
+            <TrendingUp className="w-8 h-8 text-yellow-500 mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              Emoji Trends
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Discover the most popular emojis and trending combinations
+            </p>
+            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+              View trends <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/gifs"
+            className="group p-6 rounded-xl bg-card border border-border hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-200"
+          >
+            <Image className="w-8 h-8 text-pink-500 mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              GIF Search
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Search and browse thousands of GIFs for any occasion
+            </p>
+            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+              Browse GIFs <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/gifs/trending"
+            className="group p-6 rounded-xl bg-card border border-border hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-200"
+          >
+            <TrendingUp className="w-8 h-8 text-orange-500 mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              Trending GIFs
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Discover the hottest and most viral GIFs trending right now
+            </p>
+            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+              View trending <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/gifs/categories"
+            className="group p-6 rounded-xl bg-card border border-border hover:border-indigo-300 dark:hover:border-indigo-700 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 transition-all duration-200"
+          >
+            <Image className="w-8 h-8 text-teal-500 mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              GIF Categories
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Browse GIFs organized by category - reactions, emotions, and more
+            </p>
+            <div className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+              Browse categories <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
         </div>
       </section>
 
