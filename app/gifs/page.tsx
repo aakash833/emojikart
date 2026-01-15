@@ -3,9 +3,9 @@ import { StructuredData } from "@/components/structured-data";
 import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
 
 export const metadata: Metadata = {
-  title: "GIF Finder - Search & Find GIFs Online Free | GIF Search Engine 2025",
+  title: "GIF Finder - Search, Download & Find GIFs Online Free | GIF Search Engine 2025",
   description:
-    "GIF finder and search engine - Find millions of free GIFs online. Search GIFs by keyword, browse by category, discover trending GIFs. Copy GIF URLs instantly. Best GIF finder tool for reactions, memes, funny GIFs, and more. No registration required.",
+    "GIF finder and search engine - Find millions of free GIFs online. Search GIFs by keyword, browse by category, discover trending GIFs. Download GIFs in high quality or copy GIF URLs instantly. Best GIF finder tool with download feature for reactions, memes, funny GIFs, and more. No registration required.",
   keywords: [
     "gif finder",
     "gif search",
@@ -72,6 +72,34 @@ export const metadata: Metadata = {
     "gif link",
     "share gif",
     "download gif",
+    "download gifs",
+    "gif download",
+    "gif downloads",
+    "download gif free",
+    "free gif download",
+    "gif downloader",
+    "gif download tool",
+    "download gifs online",
+    "online gif download",
+    "gif download site",
+    "gif download website",
+    "download gif high quality",
+    "high quality gif download",
+    "gif download hd",
+    "hd gif download",
+    "download gif original",
+    "original gif download",
+    "download gif full quality",
+    "full quality gif download",
+    "save gif",
+    "save gifs",
+    "gif saver",
+    "download animated gif",
+    "animated gif download",
+    "download gif file",
+    "gif file download",
+    "download gif images",
+    "gif images download",
     "gif for social media",
     "gif for twitter",
     "gif for facebook",
@@ -84,9 +112,9 @@ export const metadata: Metadata = {
     "emoji keyboard online",
   ],
   openGraph: {
-    title: "GIF Finder - Search & Find GIFs Online Free | GIF Search Engine 2025",
+    title: "GIF Finder - Search, Download & Find GIFs Online Free | GIF Search Engine 2025",
     description:
-      "GIF finder and search engine - Find millions of free GIFs online. Search GIFs by keyword, browse by category, discover trending GIFs. Copy GIF URLs instantly. Best GIF finder tool for reactions, memes, funny GIFs, and more.",
+      "GIF finder and search engine - Find millions of free GIFs online. Search GIFs by keyword, browse by category, discover trending GIFs. Download GIFs in high quality or copy GIF URLs instantly. Best GIF finder tool with download feature.",
     type: "website",
     url: "https://emojikart.com/gifs",
     images: [
@@ -100,10 +128,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GIF Finder - Search & Find GIFs Online Free | GIF Search Engine 2025",
+    title: "GIF Finder - Search, Download & Find GIFs Online Free | GIF Search Engine 2025",
     description:
-      "GIF finder and search engine - Find millions of free GIFs online. Search GIFs by keyword, browse by category, discover trending GIFs. Copy GIF URLs instantly.",
-    images: ["https://emojikart.com/og-image.svg"],
+      "GIF finder and search engine - Find millions of free GIFs online. Search GIFs by keyword, browse by category, discover trending GIFs. Download GIFs in high quality or copy GIF URLs instantly.",
+    images: ["https://emojikart.com/gifs/opengraph-image"],
   },
   alternates: {
     canonical: "https://emojikart.com/gifs",
@@ -130,9 +158,9 @@ export default function GifsPage() {
         data={{
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "GIF Finder - Search & Find GIFs Online Free",
+          name: "GIF Finder - Search, Download & Find GIFs Online Free",
           description:
-            "Free online GIF finder and search engine. Find millions of GIFs by keyword, category, or trending. Copy GIF URLs instantly. Best GIF finder tool for reactions, memes, funny GIFs, and social media.",
+            "Free online GIF finder and search engine. Find millions of GIFs by keyword, category, or trending. Download GIFs in high quality or copy GIF URLs instantly. Best GIF finder tool with download feature for reactions, memes, funny GIFs, and social media.",
           url: "https://emojikart.com/gifs",
           applicationCategory: "UtilityApplication",
           operatingSystem: "Web",
@@ -145,12 +173,14 @@ export default function GifsPage() {
             "GIF search by keyword",
             "Browse GIFs by category",
             "Trending GIFs discovery",
+            "Download GIFs in high quality",
             "Copy GIF URLs instantly",
             "Free GIF finder tool",
             "No registration required",
             "Reaction GIFs",
             "Funny GIFs",
             "Meme GIFs",
+            "Original quality downloads",
           ],
           aggregateRating: {
             "@type": "AggregateRating",
@@ -191,10 +221,18 @@ export default function GifsPage() {
             },
             {
               "@type": "Question",
+              name: "Can I download GIFs?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes! You can download any GIF in high quality with one click. Simply hover over a GIF and click the 'Download' button to save it to your device. Downloads are in original quality for the best results. You can also copy GIF URLs to share them online.",
+              },
+            },
+            {
+              "@type": "Question",
               name: "Can I use GIFs found here on social media?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! You can use the GIFs you find on any platform that supports GIFs, including Twitter, Facebook, Instagram, WhatsApp, Discord, Slack, email, and more. Simply copy the GIF URL and paste it where you want to use it.",
+                text: "Yes! You can use the GIFs you find on any platform that supports GIFs, including Twitter, Facebook, Instagram, WhatsApp, Discord, Slack, email, and more. You can download GIFs to use offline or copy the GIF URL to share online.",
               },
             },
             {

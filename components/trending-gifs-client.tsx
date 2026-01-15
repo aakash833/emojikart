@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, TrendingUp, Flame, Loader2 } from "lucide-react";
+import { Copy, Download, TrendingUp, Flame, Loader2 } from "lucide-react";
 import { hapticCopy } from "@/lib/haptics";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ interface GIF {
   title: string;
   url: string;
   previewUrl: string;
+  downloadUrl: string;
   category: string;
   tags: string[];
   trending: boolean;
@@ -21,6 +22,7 @@ interface GIF {
 
 export function TrendingGifsClient() {
   const [copiedGifId, setCopiedGifId] = useState<string | null>(null);
+  const [downloadingGifId, setDownloadingGifId] = useState<string | null>(null);
   const [gifs, setGifs] = useState<GIF[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,6 +56,47 @@ export function TrendingGifsClient() {
     }
   };
 
+  const handleDownloadGif = async (gif: GIF) => {
+    try {
+      setDownloadingGifId(gif.id);
+      hapticCopy();
+      
+      // Fetch the GIF as a blob
+      const response = await fetch(gif.downloadUrl);
+      if (!response.ok) throw new Error("Failed to download GIF");
+      
+      const blob = await response.blob();
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      
+      // Create a safe filename from the GIF title
+      const safeTitle = gif.title
+        .replace(/[^a-z0-9]/gi, "_")
+        .toLowerCase()
+        .substring(0, 50);
+      link.download = `${safeTitle || "gif"}_${gif.id}.gif`;
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      setTimeout(() => {
+        setDownloadingGifId(null);
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to download GIF:", error);
+      setDownloadingGifId(null);
+      alert("Failed to download GIF. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -68,7 +111,8 @@ export function TrendingGifsClient() {
             Find <strong>viral GIFs</strong>, <strong>hot GIFs</strong>, <strong>reaction GIFs</strong>, and the 
             <strong> hottest GIFs</strong> everyone is using right now. Our trending GIF collection is updated daily 
             with the latest <strong>trending GIFs</strong> and <strong>viral GIFs</strong> from across the internet. 
-            Copy trending GIF URLs instantly and stay ahead of the curve with the most popular GIFs of 2025.
+            <strong> Download trending GIFs in high quality</strong> or copy trending GIF URLs instantly and stay ahead 
+            of the curve with the most popular GIFs of 2025.
           </p>
           <div className="bg-card border rounded-lg p-6 mt-6">
             <h2 className="text-2xl font-semibold mb-3">What Makes a GIF Trending?</h2>
@@ -104,12 +148,13 @@ export function TrendingGifsClient() {
             >
               <CardContent className="p-0">
                 <div className="relative aspect-square bg-muted overflow-hidden">
-                  {/* GIF Preview */}
+                  {/* GIF Preview - Using higher quality preview */}
                   <img
                     src={gif.previewUrl}
                     alt={gif.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
+                    title={gif.title}
                   />
                   {/* Overlay on Hover */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -123,6 +168,27 @@ export function TrendingGifsClient() {
                     >
                       <Copy className="w-4 h-4 mr-2" />
                       {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => handleDownloadGif(gif)}
+                      disabled={downloadingGifId === gif.id}
+                      className={cn(
+                        "cursor-pointer",
+                        downloadingGifId === gif.id && "opacity-50"
+                      )}
+                    >
+                      {downloadingGifId === gif.id ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Downloading...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 mr-2" />
+                          Download
+                        </>
+                      )}
                     </Button>
                   </div>
                   {/* Trending Badge */}

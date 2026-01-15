@@ -3,9 +3,9 @@ import { StructuredData } from "@/components/structured-data";
 import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
 
 export const metadata: Metadata = {
-  title: "GIF Categories - Browse GIFs by Category | Reaction, Funny, Meme GIFs",
+  title: "GIF Categories - Browse & Download GIFs by Category | Reaction, Funny, Meme GIFs",
   description:
-    "Browse GIFs by category - reactions, emotions, celebrations, animals, memes, funny, love, success, sports, food, travel, and more. Find the perfect GIF for any situation organized by category. Free GIF category browser.",
+    "Browse GIFs by category - reactions, emotions, celebrations, animals, memes, funny, love, success, sports, food, travel, and more. Download GIFs in high quality or copy GIF URLs. Find the perfect GIF for any situation organized by category. Free GIF category browser with download feature.",
   keywords: [
     "gif categories",
     "gif by category",
@@ -68,13 +68,36 @@ export const metadata: Metadata = {
     "gif keyboard",
     "gif online",
     "free gif categories",
+    "download gif by category",
+    "download gif category",
+    "download reaction gifs",
+    "download funny gifs",
+    "download meme gifs",
+    "download celebration gifs",
+    "download animal gifs",
+    "download love gifs",
+    "download emotion gifs",
+    "download success gifs",
+    "download sports gifs",
+    "download food gifs",
+    "download travel gifs",
+    "gif download by category",
+    "category gif download",
+    "download gif high quality",
+    "high quality gif download",
+    "download gif original",
+    "original gif download",
+    "download gif full quality",
+    "save gif by category",
+    "gif downloader by category",
+    "free gif download category",
     "emoji keyboard",
     "emoji keyboard online",
   ],
   openGraph: {
-    title: "GIF Categories - Browse GIFs by Category | Reaction, Funny, Meme GIFs",
+    title: "GIF Categories - Browse & Download GIFs by Category | Reaction, Funny, Meme GIFs",
     description:
-      "Browse GIFs by category - reactions, emotions, celebrations, animals, memes, funny, love, success, sports, food, travel, and more. Find the perfect GIF for any situation organized by category.",
+      "Browse GIFs by category - reactions, emotions, celebrations, animals, memes, funny, love, success, sports, food, travel, and more. Download GIFs in high quality or copy GIF URLs. Find the perfect GIF for any situation organized by category.",
     type: "website",
     url: "https://emojikart.com/gifs/categories",
     images: [
@@ -88,10 +111,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GIF Categories - Browse GIFs by Category | Reaction, Funny, Meme GIFs",
+    title: "GIF Categories - Browse & Download GIFs by Category | Reaction, Funny, Meme GIFs",
     description:
-      "Browse GIFs by category - reactions, emotions, celebrations, animals, memes, funny, love, success, and more. Find the perfect GIF for any situation.",
-    images: ["https://emojikart.com/og-image.svg"],
+      "Browse GIFs by category - reactions, emotions, celebrations, animals, memes, funny, love, success, and more. Download GIFs in high quality or copy GIF URLs. Find the perfect GIF for any situation.",
+    images: ["https://emojikart.com/gifs/categories/opengraph-image"],
   },
   alternates: {
     canonical: "https://emojikart.com/gifs/categories",
@@ -118,9 +141,9 @@ export default function GifCategoriesPage() {
         data={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "GIF Categories - Browse GIFs by Category",
+          name: "GIF Categories - Browse & Download GIFs by Category",
           description:
-            "Browse GIFs organized by category - reactions, emotions, celebrations, animals, memes, funny, love, success, sports, food, travel, and more. Find the perfect GIF for any situation organized by category.",
+            "Browse GIFs organized by category - reactions, emotions, celebrations, animals, memes, funny, love, success, sports, food, travel, and more. Download GIFs in high quality or copy GIF URLs. Find the perfect GIF for any situation organized by category.",
           url: "https://emojikart.com/gifs/categories",
           about: {
             "@type": "Thing",
@@ -157,6 +180,14 @@ export default function GifCategoriesPage() {
               acceptedAnswer: {
                 "@type": "Answer",
                 text: "Yes! After selecting a category, you can use the search function to find specific GIFs within that category. This makes it easy to find exactly what you're looking for.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Can I download GIFs from categories?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes! You can download any GIF from any category in high quality with one click. Simply hover over a GIF and click the 'Download' button to save it to your device. Downloads are in original quality for the best results. You can also copy GIF URLs to share them online.",
               },
             },
           ],

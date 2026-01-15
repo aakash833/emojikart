@@ -15,6 +15,7 @@ interface GIF {
   title: string;
   url: string;
   previewUrl: string;
+  downloadUrl: string;
   category: string;
   tags: string[];
   trending: boolean;
@@ -25,6 +26,7 @@ export function GifsClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<GIFCategory | "All">("All");
   const [copiedGifId, setCopiedGifId] = useState<string | null>(null);
+  const [downloadingGifId, setDownloadingGifId] = useState<string | null>(null);
   const [gifs, setGifs] = useState<GIF[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -80,6 +82,47 @@ export function GifsClient() {
     }
   };
 
+  const handleDownloadGif = async (gif: GIF) => {
+    try {
+      setDownloadingGifId(gif.id);
+      hapticCopy();
+      
+      // Fetch the GIF as a blob
+      const response = await fetch(gif.downloadUrl);
+      if (!response.ok) throw new Error("Failed to download GIF");
+      
+      const blob = await response.blob();
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      
+      // Create a safe filename from the GIF title
+      const safeTitle = gif.title
+        .replace(/[^a-z0-9]/gi, "_")
+        .toLowerCase()
+        .substring(0, 50);
+      link.download = `${safeTitle || "gif"}_${gif.id}.gif`;
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      setTimeout(() => {
+        setDownloadingGifId(null);
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to download GIF:", error);
+      setDownloadingGifId(null);
+      alert("Failed to download GIF. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -93,64 +136,70 @@ export function GifsClient() {
             Use our powerful <strong>GIF finder</strong> and <strong>GIF search engine</strong> to discover millions of free GIFs online. 
             Search GIFs by keyword, browse by category, or discover trending GIFs. Our <strong>GIF finder tool</strong> helps you find 
             the perfect GIF for any occasion - reactions, emotions, celebrations, memes, funny GIFs, and more. 
-            Copy GIF URLs instantly and use them on social media, messaging apps, or websites. 
-            <strong> No registration required</strong> - start finding GIFs now!
+            <strong> Download GIFs in high quality</strong> or copy GIF URLs instantly and use them on social media, messaging apps, or websites. 
+            <strong> No registration required</strong> - start finding and downloading GIFs now!
           </p>
           <div className="grid md:grid-cols-3 gap-4 mt-6 text-sm">
             <div className="bg-card border rounded-lg p-4">
               <h3 className="font-semibold mb-2">🔍 Search by Keyword</h3>
-              <p className="text-muted-foreground">Enter any keyword to find relevant GIFs instantly. Our GIF finder searches millions of GIFs to find exactly what you need.</p>
+              <p className="text-muted-foreground">Enter any keyword to find relevant GIFs instantly. Our GIF finder searches millions of GIFs to find exactly what you need. Download or copy GIF URLs with one click.</p>
             </div>
             <div className="bg-card border rounded-lg p-4">
               <h3 className="font-semibold mb-2">📁 Browse by Category</h3>
-              <p className="text-muted-foreground">Explore GIFs organized by category - reactions, emotions, celebrations, animals, memes, and more. Perfect for discovering new GIFs.</p>
+              <p className="text-muted-foreground">Explore GIFs organized by category - reactions, emotions, celebrations, animals, memes, and more. Perfect for discovering new GIFs. Download GIFs in high quality.</p>
             </div>
             <div className="bg-card border rounded-lg p-4">
               <h3 className="font-semibold mb-2">🔥 Trending GIFs</h3>
-              <p className="text-muted-foreground">Discover the most popular and viral GIFs trending right now. Updated daily with the hottest GIFs everyone is using.</p>
+              <p className="text-muted-foreground">Discover the most popular and viral GIFs trending right now. Updated daily with the hottest GIFs everyone is using. Download trending GIFs in original quality.</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Search and Filters */}
-        <div className="mb-6 space-y-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-            <Input
-              type="text"
-              placeholder="Search GIFs by keyword, tag, or category..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 text-lg py-6"
-            />
-          </div>
+      {/* Search and Filters - Sticky (outside container for proper positioning) */}
+      <div className="w-full bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
+        <div className="container mx-auto px-4 py-4 max-w-7xl">
+          <div className="space-y-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                type="text"
+                placeholder="Search GIFs by keyword, tag, or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 text-lg py-6"
+              />
+            </div>
 
-          {/* Category Filters */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <Filter className="w-5 h-5 text-muted-foreground" />
-            <Button
-              variant={selectedCategory === "All" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory("All")}
-              className="cursor-pointer"
-            >
-              All
-            </Button>
-            {gifCategories.map((category) => (
+            {/* Category Filters */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Filter className="w-5 h-5 text-muted-foreground" />
               <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
+                variant={selectedCategory === "All" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => setSelectedCategory("All")}
                 className="cursor-pointer"
               >
-                {category}
+                All
               </Button>
-            ))}
+              {gifCategories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category)}
+                  className="cursor-pointer"
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
+      </div>
 
+      <div className="container mx-auto px-4 py-4 max-w-7xl">
         {/* Results Count */}
         {!initialLoad && (
           <div className="mb-4 text-sm text-muted-foreground">
@@ -175,26 +224,48 @@ export function GifsClient() {
               >
                 <CardContent className="p-0">
                   <div className="relative aspect-square bg-muted overflow-hidden">
-                    {/* GIF Preview */}
+                    {/* GIF Preview - Using higher quality preview */}
                     <img
                       src={gif.previewUrl}
                       alt={gif.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
+                      title={gif.title}
                     />
                     {/* Overlay on Hover */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => handleCopyGif(gif)}
-                      className={cn(
-                        "cursor-pointer",
-                        copiedGifId === gif.id && "bg-green-600 hover:bg-green-700"
-                      )}
-                    >
-                      <Copy className="w-4 h-4 mr-2" />
-                      {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
-                    </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleCopyGif(gif)}
+                        className={cn(
+                          "cursor-pointer",
+                          copiedGifId === gif.id && "bg-green-600 hover:bg-green-700"
+                        )}
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleDownloadGif(gif)}
+                        disabled={downloadingGifId === gif.id}
+                        className={cn(
+                          "cursor-pointer",
+                          downloadingGifId === gif.id && "opacity-50"
+                        )}
+                      >
+                        {downloadingGifId === gif.id ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </>
+                        )}
+                      </Button>
                     </div>
                     {/* Badges */}
                     <div className="absolute top-2 left-2 flex gap-2">

@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: `/og-emoji.png?emoji=${encodeURIComponent(emoji.emoji)}`,
+          url: `https://emojikart.com/emoji/${params.slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: `${displayName} emoji`,
@@ -76,6 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
+      images: [`https://emojikart.com/emoji/${params.slug}/opengraph-image`],
     },
     alternates: {
       canonical: `/emoji/${slug}`,

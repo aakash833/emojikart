@@ -17,16 +17,25 @@ export interface GiphyGIF {
       url: string;
       width: string;
       height: string;
+      size: string;
+    };
+    downsized_large?: {
+      url: string;
+      width: string;
+      height: string;
+      size: string;
     };
     fixed_width: {
       url: string;
       width: string;
       height: string;
+      size: string;
     };
     fixed_width_small: {
       url: string;
       width: string;
       height: string;
+      size: string;
     };
   };
   trending_datetime?: string;
@@ -47,6 +56,7 @@ export async function searchGiphyGIFs(
   limit: number = 25
 ): Promise<GiphyGIF[]> {
   try {
+    // Request higher quality images by not limiting size
     const url = `${GIPHY_BASE_URL}/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(
       query
     )}&limit=${limit}&rating=g&lang=en`;
@@ -120,16 +130,27 @@ export function convertGiphyToGIF(giphy: GiphyGIF): {
   title: string;
   url: string;
   previewUrl: string;
+  downloadUrl: string;
   category: string;
   tags: string[];
   trending: boolean;
   popular: boolean;
 } {
+  // Use higher quality preview - prefer fixed_width over fixed_width_small for better quality
+  // Use downsized_large if available for even better preview quality, otherwise use fixed_width
+  const previewUrl = giphy.images.downsized_large?.url || 
+                     giphy.images.fixed_width.url || 
+                     giphy.images.fixed_width_small.url;
+  
+  // Use original URL for downloads (highest quality)
+  const downloadUrl = giphy.images.original.url;
+  
   return {
     id: giphy.id,
     title: giphy.title || "GIF",
-    url: giphy.images.original.url,
-    previewUrl: giphy.images.fixed_width_small.url || giphy.images.fixed_width.url,
+    url: giphy.images.original.url, // Original URL for sharing
+    previewUrl: previewUrl, // Higher quality preview
+    downloadUrl: downloadUrl, // Original quality for download
     category: "Reactions", // Default category
     tags: [],
     trending: !!giphy.trending_datetime,

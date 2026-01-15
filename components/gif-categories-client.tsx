@@ -47,8 +47,8 @@ export function GifCategoriesClient() {
             Browse our extensive collection of GIFs organized by <strong>category</strong>. Whether you're looking for 
             <strong> reaction GIFs</strong>, <strong>funny GIFs</strong>, <strong>meme GIFs</strong>, <strong>celebration GIFs</strong>, 
             <strong> animal GIFs</strong>, <strong>love GIFs</strong>, or any other type of GIF, our category browser makes it easy 
-            to find exactly what you need. Each category contains hundreds of carefully organized GIFs, making it simple to 
-            discover the perfect GIF for any situation or emotion.
+            to find exactly what you need. <strong>Download GIFs in high quality</strong> or copy GIF URLs instantly. Each category contains 
+            hundreds of carefully organized GIFs, making it simple to discover the perfect GIF for any situation or emotion.
           </p>
           <div className="bg-card border rounded-lg p-6 mt-6">
             <h2 className="text-2xl font-semibold mb-3">Popular GIF Categories</h2>

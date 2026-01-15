@@ -188,7 +188,7 @@ export async function generateMetadata({
       locale: "en_US",
       images: [
         {
-          url: `https://emojikart.com/og-image-${params.slug}.png`,
+          url: `https://emojikart.com/category/${params.slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: `${category} Emojis - ${emojiCount}+ Emojis Available`,
@@ -199,7 +199,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${category} Emojis - ${emojiCount}+ Free Emojis`,
       description: description,
-      images: [`https://emojikart.com/og-image-${params.slug}.png`],
+      images: [`https://emojikart.com/category/${params.slug}/opengraph-image`],
     },
     alternates: {
       canonical: `https://emojikart.com/category/${params.slug}`,

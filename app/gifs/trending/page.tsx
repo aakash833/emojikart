@@ -3,9 +3,9 @@ import { StructuredData } from "@/components/structured-data";
 import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
 
 export const metadata: Metadata = {
-  title: "Trending GIFs 2025 - Most Popular & Viral GIFs | Hot GIFs Right Now",
+  title: "Trending GIFs 2025 - Download Most Popular & Viral GIFs | Hot GIFs Right Now",
   description:
-    "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Updated daily with the latest trending GIFs. Copy trending GIF URLs instantly.",
+    "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Download trending GIFs in high quality or copy GIF URLs instantly. Updated daily with the latest trending GIFs.",
   keywords: [
     "trending gifs",
     "trending gifs 2025",
@@ -51,13 +51,37 @@ export const metadata: Metadata = {
     "gif keyboard",
     "gif online",
     "free trending gifs",
+    "download trending gifs",
+    "download viral gifs",
+    "download popular gifs",
+    "download hot gifs",
+    "trending gif download",
+    "viral gif download",
+    "popular gif download",
+    "hot gif download",
+    "download trending gif",
+    "download viral gif",
+    "download popular gif",
+    "download hot gif",
+    "gif download trending",
+    "gif download viral",
+    "gif download popular",
+    "free gif download trending",
+    "download gif high quality",
+    "high quality gif download",
+    "download gif original",
+    "original gif download",
+    "download gif full quality",
+    "save trending gif",
+    "save viral gif",
+    "gif downloader trending",
     "emoji keyboard",
     "emoji keyboard online",
   ],
   openGraph: {
-    title: "Trending GIFs 2025 - Most Popular & Viral GIFs | Hot GIFs Right Now",
+    title: "Trending GIFs 2025 - Download Most Popular & Viral GIFs | Hot GIFs Right Now",
     description:
-      "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Updated daily.",
+      "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Download trending GIFs in high quality or copy GIF URLs instantly. Updated daily.",
     type: "website",
     url: "https://emojikart.com/gifs/trending",
     images: [
@@ -71,10 +95,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trending GIFs 2025 - Most Popular & Viral GIFs | Hot GIFs Right Now",
+    title: "Trending GIFs 2025 - Download Most Popular & Viral GIFs | Hot GIFs Right Now",
     description:
-      "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now.",
-    images: ["https://emojikart.com/og-image.svg"],
+      "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Download trending GIFs in high quality.",
+    images: ["https://emojikart.com/gifs/trending/opengraph-image"],
   },
   alternates: {
     canonical: "https://emojikart.com/gifs/trending",
@@ -101,9 +125,9 @@ export default function TrendingGifsPage() {
         data={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "Trending GIFs 2025 - Most Popular & Viral GIFs",
+          name: "Trending GIFs 2025 - Download Most Popular & Viral GIFs",
           description:
-            "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Updated daily with the latest trending GIFs.",
+            "Discover the most trending and popular GIFs of 2025. Find viral GIFs, hot GIFs, reaction GIFs, and the hottest GIFs everyone is using right now. Download trending GIFs in high quality or copy GIF URLs instantly. Updated daily with the latest trending GIFs.",
           url: "https://emojikart.com/gifs/trending",
           about: {
             "@type": "Thing",
@@ -136,10 +160,18 @@ export default function TrendingGifsPage() {
             },
             {
               "@type": "Question",
+              name: "Can I download trending GIFs?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes! You can download any trending GIF in high quality with one click. Simply hover over a GIF and click the 'Download' button to save it to your device. Downloads are in original quality for the best results. You can also copy GIF URLs to share them online.",
+              },
+            },
+            {
+              "@type": "Question",
               name: "Can I copy trending GIF URLs?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Yes! You can instantly copy any trending GIF URL with one click. Simply click the copy button on any GIF and paste the URL wherever you want to use it - social media, messaging apps, emails, or websites.",
+                text: "Yes! You can instantly copy any trending GIF URL with one click. Simply click the copy button on any GIF and paste the URL wherever you want to use it - social media, messaging apps, emails, or websites. You can also download GIFs for offline use.",
               },
             },
           ],
