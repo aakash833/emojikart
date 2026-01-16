@@ -193,7 +193,7 @@ export function GifsClient() {
         <div className="prose prose-lg dark:prose-invert max-w-none">
           <h1 className="text-4xl font-bold mb-4 flex items-center gap-2">
             <Search className="w-8 h-8 text-indigo-500" />
-            GIF Finder - Search & Find GIFs Online Free
+            GIF Finder - Search & Find GIFs Online | Download GIFs Online Free
           </h1>
           <p className="text-lg text-muted-foreground mb-4">
             Use our powerful <strong>GIF finder</strong> and <strong>GIF search engine</strong> to discover millions of free GIFs online. 

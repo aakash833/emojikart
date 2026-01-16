@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   keywords: [
     "emoji keyboard",
     "emoji keyboard online",
+    "emoji copy and paste",
+    "copy and paste emojis",
+    "emojis copy and paste",
     "online emoji keyboard",
     "free emoji keyboard",
     "emoji picker",

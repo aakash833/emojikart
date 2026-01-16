@@ -122,7 +122,7 @@ export const metadata: Metadata = {
         url: "https://emojikart.com/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "GIF Finder - Search & Find GIFs Online",
+        alt: "GIF Finder - Search & Find GIFs Online | Download GIFs Online Free",
       },
     ],
   },
