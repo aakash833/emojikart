@@ -48,6 +48,7 @@ const AdUnit = dynamic(() => import("../components/ad-unit"), {
 const GifsClient = dynamic(() => import("../components/gifs-client").then(m => ({ default: m.GifsClient })), { ssr: false });
 const TrendingGifsClient = dynamic(() => import("../components/trending-gifs-client").then(m => ({ default: m.TrendingGifsClient })), { ssr: false });
 const GifCategoriesClient = dynamic(() => import("../components/gif-categories-client").then(m => ({ default: m.GifCategoriesClient })), { ssr: false });
+const GifDetailClient = dynamic(() => import("../components/gif-detail-client").then(m => ({ default: m.GifDetailClient })), { ssr: false });
 const EmojiGeneratorClient = dynamic(() => import("../components/emoji-generator-client").then(m => ({ default: m.EmojiGeneratorClient })), { ssr: false });
 const EmojiMeaningsClient = dynamic(() => import("../components/emoji-meanings-client").then(m => ({ default: m.EmojiMeaningsClient })), { ssr: false });
 const EmojiTrendsClient = dynamic(() => import("../components/emoji-trends-client").then(m => ({ default: m.EmojiTrendsClient })), { ssr: false });
@@ -717,6 +718,8 @@ export function EmojiKeyboardClient() {
                 <BlogPageClient />
               ) : blogSlug ? (
                 <BlogPostClient slug={blogSlug} />
+              ) : pathname?.startsWith("/gif/") ? (
+                <GifDetailClient />
               ) : pathname === "/gifs" ? (
                 <GifsClient />
               ) : pathname === "/gifs/trending" ? (

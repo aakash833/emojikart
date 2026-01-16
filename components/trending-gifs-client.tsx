@@ -7,6 +7,7 @@ import { hapticCopy } from "@/lib/haptics";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getTrendingGiphyGIFs, convertGiphyToGIF, type GiphyGIF } from "@/lib/giphy-api";
+import Link from "next/link";
 
 interface GIF {
   id: string;
@@ -147,60 +148,72 @@ export function TrendingGifsClient() {
               className="group hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
               <CardContent className="p-0">
-                <div className="relative aspect-square bg-muted overflow-hidden">
-                  {/* GIF Preview - Using higher quality preview */}
-                  <img
-                    src={gif.previewUrl}
-                    alt={gif.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                    title={gif.title}
-                  />
-                  {/* Overlay on Hover */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => handleCopyGif(gif)}
-                      className={cn(
-                        "cursor-pointer",
-                        copiedGifId === gif.id && "bg-green-600 hover:bg-green-700"
-                      )}
-                    >
-                      <Copy className="w-4 h-4 mr-2" />
-                      {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => handleDownloadGif(gif)}
-                      disabled={downloadingGifId === gif.id}
-                      className={cn(
-                        "cursor-pointer",
-                        downloadingGifId === gif.id && "opacity-50"
-                      )}
-                    >
-                      {downloadingGifId === gif.id ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Downloading...
-                        </>
-                      ) : (
-                        <>
-                          <Download className="w-4 h-4 mr-2" />
-                          Download
-                        </>
-                      )}
-                    </Button>
+                <Link href={`/gif/${gif.id}`} className="block">
+                  <div className="relative aspect-square bg-muted overflow-hidden">
+                    {/* GIF Preview - Using higher quality preview */}
+                    <img
+                      src={gif.previewUrl}
+                      alt={gif.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      title={gif.title}
+                    />
+                    {/* Overlay on Hover */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleCopyGif(gif);
+                        }}
+                        className={cn(
+                          "cursor-pointer",
+                          copiedGifId === gif.id && "bg-green-600 hover:bg-green-700"
+                        )}
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        {copiedGifId === gif.id ? "Copied!" : "Copy URL"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDownloadGif(gif);
+                        }}
+                        disabled={downloadingGifId === gif.id}
+                        className={cn(
+                          "cursor-pointer",
+                          downloadingGifId === gif.id && "opacity-50"
+                        )}
+                      >
+                        {downloadingGifId === gif.id ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Downloading...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    {/* Trending Badge */}
+                    <div className="absolute top-2 left-2">
+                      <span className="px-2 py-1 bg-orange-500 text-white text-xs font-medium rounded flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3" />
+                        Trending
+                      </span>
+                    </div>
                   </div>
-                  {/* Trending Badge */}
-                  <div className="absolute top-2 left-2">
-                    <span className="px-2 py-1 bg-orange-500 text-white text-xs font-medium rounded flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" />
-                      Trending
-                    </span>
-                  </div>
-                </div>
+                </Link>
                 <div className="p-3">
-                  <h3 className="font-semibold text-sm mb-1 line-clamp-1">{gif.title}</h3>
+                  <Link href={`/gif/${gif.id}`}>
+                    <h3 className="font-semibold text-sm mb-1 line-clamp-1 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">{gif.title}</h3>
+                  </Link>
                   <div className="flex flex-wrap gap-1">
                     {gif.tags.slice(0, 3).map((tag) => (
                       <span

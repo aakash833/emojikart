@@ -141,6 +141,24 @@ export async function getGiphyGIFsByCategory(
   }
 }
 
+// Get a single GIF by ID
+export async function getGiphyGIFById(id: string): Promise<GiphyGIF | null> {
+  try {
+    const url = `${GIPHY_BASE_URL}/${id}?api_key=${GIPHY_API_KEY}`;
+    
+    const response = await fetch(url, { next: { revalidate: 3600 } }); // Cache for 1 hour
+    if (!response.ok) {
+      throw new Error("Failed to fetch GIF");
+    }
+    
+    const data: { data: GiphyGIF } = await response.json();
+    return data.data || null;
+  } catch (error) {
+    console.error("Error fetching GIF by ID:", error);
+    return null;
+  }
+}
+
 // Convert Giphy GIF to our format
 export function convertGiphyToGIF(giphy: GiphyGIF): {
   id: string;
