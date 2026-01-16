@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { emojiData } from "@/lib/emoji-data";
 import { getAllEmojis } from "@/lib/get-all-emojis";
+import { getTrendingGiphyGIFs } from "@/lib/giphy-api";
 
 const categorySlugs: Record<string, string> = {
   "smileys-emotion": "Smileys & Emotion",
@@ -14,7 +15,7 @@ const categorySlugs: Record<string, string> = {
   flags: "Flags",
 };
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://emojikart.com"; // Replace with your actual domain
 
   // Category pages
@@ -81,6 +82,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: page.priority as 0.5 | 0.6,
   }));
 
+  // Individual GIF pages - Fetch trending GIFs to include in sitemap
+  let gifPages: MetadataRoute.Sitemap = [];
+  try {
+    // Fetch top 100 trending GIFs for sitemap
+    const trendingResult = await getTrendingGiphyGIFs(100, 0);
+    gifPages = trendingResult.gifs.map((gif) => ({
+      url: `${baseUrl}/gif/${gif.id}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8, // High priority for individual GIF pages
+    }));
+  } catch (error) {
+    console.error("Error fetching GIFs for sitemap:", error);
+    // Continue without GIF pages if API fails
+  }
+
   return [
     {
       url: baseUrl,
@@ -92,6 +109,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogPosts,
     ...categoryPages,
     ...requiredPages,
+    ...gifPages, // Individual GIF pages
     ...emojiPages.slice(0, 1000), // Limit to first 1000 for performance, Google will crawl more
   ];
 }
