@@ -3,8 +3,19 @@ import { useEffect } from "react";
 
 export default function AdUnit() {
   useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window === "undefined") {
+      return;
+    }
+
     const loadAd = () => {
       try {
+        // Check if AdSense script is loaded
+        if (typeof (window as any).adsbygoogle === "undefined") {
+          // Script might not be loaded yet, especially in preview environments
+          return;
+        }
+
         // adsbygoogle is injected by the AdSense script at runtime. Cast to any
         // so TypeScript doesn't complain during build.
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -12,11 +23,14 @@ export default function AdUnit() {
         (window as any).adsbygoogle = (window as any).adsbygoogle || [];
         (window as any).adsbygoogle.push({});
       } catch (e) {
-        console.error("Adsense error", e);
+        // Silently fail in preview/restricted environments
+        if (process.env.NODE_ENV === "development") {
+          console.warn("AdSense error:", e);
+        }
       }
     };
 
-    // Delay until layout is stable
+    // Delay until layout is stable and script is loaded
     const id = setTimeout(loadAd, 500);
 
     return () => clearTimeout(id);

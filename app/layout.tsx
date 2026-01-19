@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import NavigationLoader from "@/components/navigation-loader";
 import { StructuredData } from "@/components/structured-data";
+import { ErrorBoundary } from "@/components/error-boundary";
 import "./globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -227,60 +228,62 @@ export default function RootLayout({
         ></script>
       </head>
       <body className={`font-sans antialiased`} suppressHydrationWarning>
-        <ThemeProvider attribute="class">
-          {/* Organization + WebSite JSON-LD so search engines can pick up site name and logo */}
-          <StructuredData
-            type="Website"
-            data={{
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "Organization",
-                  "@id": "https://emojikart.com/#organization",
-                  name: "Emoji keyboard online 😊",
-                  url: "https://emojikart.com",
-                  logo: {
-                    "@type": "ImageObject",
-                    "@id": "https://emojikart.com/#logo",
-                    url: "https://emojikart.com/logo.svg",
-                    contentUrl: "https://emojikart.com/logo.svg",
-                    caption: "Emoji keyboard online 😊",
-                    width: 512,
-                    height: 512,
-                  },
-                  sameAs: [
-                    "https://emojikart.com",
-                  ],
-                },
-                {
-                  "@type": "WebSite",
-                  "@id": "https://emojikart.com/#website",
-                  url: "https://emojikart.com",
-                  name: "Emoji keyboard online 😊",
-                  description: "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis.",
-                  publisher: {
+        <ErrorBoundary>
+          <ThemeProvider attribute="class">
+            {/* Organization + WebSite JSON-LD so search engines can pick up site name and logo */}
+            <StructuredData
+              type="Website"
+              data={{
+                "@context": "https://schema.org",
+                "@graph": [
+                  {
+                    "@type": "Organization",
                     "@id": "https://emojikart.com/#organization",
-                  },
-                  inLanguage: "en-US",
-                  potentialAction: {
-                    "@type": "SearchAction",
-                    target: {
-                      "@type": "EntryPoint",
-                      urlTemplate: "https://emojikart.com/?q={search_term_string}",
+                    name: "Emoji keyboard online 😊",
+                    url: "https://emojikart.com",
+                    logo: {
+                      "@type": "ImageObject",
+                      "@id": "https://emojikart.com/#logo",
+                      url: "https://emojikart.com/logo.svg",
+                      contentUrl: "https://emojikart.com/logo.svg",
+                      caption: "Emoji keyboard online 😊",
+                      width: 512,
+                      height: 512,
                     },
-                    "query-input": "required name=search_term_string",
+                    sameAs: [
+                      "https://emojikart.com",
+                    ],
                   },
-                },
-              ],
-            }}
-          />
-          <NavigationLoader />
-          <div className="flex flex-col min-h-screen">
-            {children}
-            <Footer />
-          </div>
-          <Analytics />
-        </ThemeProvider>
+                  {
+                    "@type": "WebSite",
+                    "@id": "https://emojikart.com/#website",
+                    url: "https://emojikart.com",
+                    name: "Emoji keyboard online 😊",
+                    description: "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis.",
+                    publisher: {
+                      "@id": "https://emojikart.com/#organization",
+                    },
+                    inLanguage: "en-US",
+                    potentialAction: {
+                      "@type": "SearchAction",
+                      target: {
+                        "@type": "EntryPoint",
+                        urlTemplate: "https://emojikart.com/?q={search_term_string}",
+                      },
+                      "query-input": "required name=search_term_string",
+                    },
+                  },
+                ],
+              }}
+            />
+            <NavigationLoader />
+            <div className="flex flex-col min-h-screen">
+              {children}
+              <Footer />
+            </div>
+            <Analytics />
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

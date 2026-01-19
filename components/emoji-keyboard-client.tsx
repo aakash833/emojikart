@@ -137,17 +137,32 @@ export function EmojiKeyboardClient() {
   
   // Load from localStorage after hydration (client-side only)
   useEffect(() => {
+    // Check if localStorage is available (may not be in AdSense preview or restricted environments)
+    if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return;
+    }
+
     try {
       const savedSize = localStorage.getItem("emojiSize");
       if (savedSize && ["S", "M", "L", "XL", "XXL"].includes(savedSize)) {
         setEmojiSize(savedSize as EmojiSize);
       }
-    } catch {}
+    } catch (e) {
+      // Silently fail if localStorage is not available
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to load emojiSize from localStorage:", e);
+      }
+    }
     
     try {
       const savedTheme = localStorage.getItem("theme");
       setIsDarkMode(savedTheme === "dark");
-    } catch {}
+    } catch (e) {
+      // Silently fail if localStorage is not available
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to load theme from localStorage:", e);
+      }
+    }
   }, []);
   const [copiedEmoji, setCopiedEmoji] = useState<{
     emoji: string;
@@ -183,6 +198,10 @@ export function EmojiKeyboardClient() {
 
   // Sync emojiSize and theme across tabs/windows
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     const onStorage = (e: StorageEvent) => {
       if (e.key === "emojiSize" && e.newValue) {
         const v = e.newValue;
@@ -200,25 +219,43 @@ export function EmojiKeyboardClient() {
 
   // Persist theme to localStorage whenever it changes and apply class
   useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
     try {
       if (isDarkMode) {
         document.documentElement.classList.add("dark");
-        localStorage.setItem("theme", "dark");
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("theme", "dark");
+        }
       } else {
         document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("theme", "light");
+        }
       }
     } catch (err) {
-      // ignore write errors
+      // ignore write errors - may fail in restricted environments
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to persist theme:", err);
+      }
     }
   }, [isDarkMode]);
 
   // Persist emoji size when changed
   useEffect(() => {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return;
+    }
+
     try {
       localStorage.setItem("emojiSize", emojiSize);
     } catch (err) {
-      // ignore
+      // ignore - may fail in restricted environments
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to persist emojiSize:", err);
+      }
     }
   }, [emojiSize]);
 
@@ -244,24 +281,40 @@ export function EmojiKeyboardClient() {
     event: React.MouseEvent
   ) => {
     try {
-      await navigator.clipboard.writeText(emoji);
+      // Check if clipboard API is available
+      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(emoji);
+      } else {
+        // Fallback for environments without clipboard API
+        console.warn("Clipboard API not available");
+        return;
+      }
       hapticCopy();
 
       // Save to recent emojis in localStorage
-      const stored = localStorage.getItem("recentEmojis");
-      const recent: EmojiWithCategory[] = stored ? JSON.parse(stored) : [];
-      const newEmoji: EmojiWithCategory = {
-        emoji,
-        name,
-        category: selectedCategory || "Unknown",
-      };
+      if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+        try {
+          const stored = localStorage.getItem("recentEmojis");
+          const recent: EmojiWithCategory[] = stored ? JSON.parse(stored) : [];
+          const newEmoji: EmojiWithCategory = {
+            emoji,
+            name,
+            category: selectedCategory || "Unknown",
+          };
 
-      // Remove if already exists and add to front
-      const filtered = recent.filter(
-        (e) => e.emoji !== emoji || e.name !== name
-      );
-      const updated = [newEmoji, ...filtered].slice(0, 20); // Keep last 20
-      localStorage.setItem("recentEmojis", JSON.stringify(updated));
+          // Remove if already exists and add to front
+          const filtered = recent.filter(
+            (e) => e.emoji !== emoji || e.name !== name
+          );
+          const updated = [newEmoji, ...filtered].slice(0, 20); // Keep last 20
+          localStorage.setItem("recentEmojis", JSON.stringify(updated));
+        } catch (err) {
+          // Silently fail if localStorage is not available
+          if (process.env.NODE_ENV === "development") {
+            console.warn("Failed to save recent emojis:", err);
+          }
+        }
+      }
 
       const rect = (event.target as HTMLElement).getBoundingClientRect();
       setCopiedEmoji({
@@ -304,9 +357,16 @@ export function EmojiKeyboardClient() {
 
   const handleSizeChange = (size: EmojiSize) => {
     setEmojiSize(size);
-    try {
-      localStorage.setItem("emojiSize", size);
-    } catch {}
+    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+      try {
+        localStorage.setItem("emojiSize", size);
+      } catch (err) {
+        // Silently fail if localStorage is not available
+        if (process.env.NODE_ENV === "development") {
+          console.warn("Failed to save emojiSize:", err);
+        }
+      }
+    }
     hapticClick();
   };
 
