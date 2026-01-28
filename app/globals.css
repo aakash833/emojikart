@@ -130,6 +130,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  html {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   /* Emoji font fallbacks for better cross-platform support */
   body, button, input, textarea {

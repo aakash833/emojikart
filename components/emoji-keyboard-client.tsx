@@ -373,18 +373,51 @@ export function EmojiKeyboardClient() {
   // Lock body scroll on mobile when sidebar (drawer) is open
   useEffect(() => {
     if (typeof window === "undefined") return;
+    
+    // Only lock scroll on mobile devices
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return;
+    
     const root = document.documentElement;
+    const body = document.body;
+    
     if (sidebarOpen) {
-      // prevent background scroll
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.width = "100%";
+      body.style.overflow = "hidden";
       root.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
+      
+      // Store scroll position for restoration
+      (body as any).__scrollPosition = scrollY;
     } else {
-      root.style.overflow = "auto";
-      document.body.style.overflow = "auto";
+      // Restore scroll position
+      const scrollY = (body as any).__scrollPosition || 0;
+      body.style.position = "";
+      body.style.top = "";
+      body.style.width = "";
+      body.style.overflow = "";
+      root.style.overflow = "";
+      
+      // Restore scroll position
+      if (scrollY) {
+        window.scrollTo(0, scrollY);
+      }
     }
+    
     return () => {
-      root.style.overflow = "auto";
-      document.body.style.overflow = "auto";
+      // Cleanup: always restore scroll on unmount
+      const scrollY = (body as any).__scrollPosition || 0;
+      body.style.position = "";
+      body.style.top = "";
+      body.style.width = "";
+      body.style.overflow = "";
+      root.style.overflow = "";
+      if (scrollY) {
+        window.scrollTo(0, scrollY);
+      }
     };
   }, [sidebarOpen]);
 
@@ -681,7 +714,7 @@ export function EmojiKeyboardClient() {
         </aside>
 
         {/* Main Content - With Left Margin for Fixed Sidebar */}
-        <main className="flex-1 flex flex-col md:ml-72 min-h-screen">
+        <main className="flex-1 flex flex-col md:ml-72 w-full h-screen md:h-auto md:min-h-screen overflow-hidden md:overflow-visible">
           {/* Header - Fixed */}
           <header
             ref={headerRef}
@@ -756,7 +789,11 @@ export function EmojiKeyboardClient() {
           {/* Emoji Grid - Scrollable Content Only */}
           <div
             ref={emojiGridRef}
-            className="flex-1 overflow-y-auto mt-[64px] md:mt-[88px] mb-4 md:mb-0 relative overscroll-contain"
+            className="flex-1 overflow-y-auto overflow-x-hidden mt-[64px] md:mt-[88px] mb-4 md:mb-0 relative overscroll-contain w-full"
+            style={{ 
+              WebkitOverflowScrolling: 'touch',
+              minHeight: 0
+            }}
           >
             {/* Loading overlay for smooth transitions */}
             {isPending && (
