@@ -58,6 +58,7 @@ const AboutPageClient = dynamic(() => import("../components/about-page-client").
 const ContactPageClient = dynamic(() => import("../components/contact-page-client").then(m => ({ default: m.ContactPageClient })), { ssr: false });
 const PrivacyPolicyClient = dynamic(() => import("../components/privacy-policy-client").then(m => ({ default: m.PrivacyPolicyClient })), { ssr: false });
 const TermsAndConditionsClient = dynamic(() => import("../components/terms-and-conditions-client").then(m => ({ default: m.TermsAndConditionsClient })), { ssr: false });
+const RefundPolicyClient = dynamic(() => import("../components/refund-policy-client").then(m => ({ default: m.RefundPolicyClient })), { ssr: false });
 
 type EmojiSize = "S" | "M" | "L" | "XL" | "XXL";
 
@@ -837,6 +838,8 @@ export function EmojiKeyboardClient() {
                 <PrivacyPolicyClient />
               ) : pathname === "/terms-and-conditions" ? (
                 <TermsAndConditionsClient />
+              ) : pathname === "/refund-policy" ? (
+                <RefundPolicyClient />
               ) : (
                 <>
                   {/* Sticky Category Header */}

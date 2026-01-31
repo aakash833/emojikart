@@ -38,6 +38,9 @@ export default function Footer() {
           <Link href="/terms-and-conditions" className="hover:text-foreground">
             Terms & Conditions
           </Link>
+          <Link href="/refund-policy" className="hover:text-foreground">
+            Refund Policy
+          </Link>
         </div>
         <div className="text-muted-foreground">
           © {new Date().getFullYear()} Emoji Keyboard

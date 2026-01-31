@@ -62,6 +62,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/blog/emoji-history-evolution-of-digital-expression`, priority: 0.85 },
     { url: `${baseUrl}/blog/emoji-marketing-how-brands-use-emojis`, priority: 0.85 },
     { url: `${baseUrl}/blog/emoji-accessibility-making-digital-communication-inclusive`, priority: 0.85 },
+    { url: `${baseUrl}/blog/best-emoji-gifts-for-friends-and-family`, priority: 0.9 },
+    { url: `${baseUrl}/blog/why-emoji-merchandise-is-trending`, priority: 0.9 },
   ].map((post) => ({
     url: post.url,
     lastModified: new Date(),
@@ -73,6 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const requiredPages = [
     { url: `${baseUrl}/privacy-policy`, priority: 0.5 },
     { url: `${baseUrl}/terms-and-conditions`, priority: 0.5 },
+    { url: `${baseUrl}/refund-policy`, priority: 0.5 },
     { url: `${baseUrl}/contact`, priority: 0.6 },
     { url: `${baseUrl}/about`, priority: 0.6 },
   ].map((page) => ({

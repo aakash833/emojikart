@@ -100,6 +100,13 @@ export function ContactPageClient() {
                 <strong className="text-foreground">Email:</strong> support@emojikart.com
               </p>
               <p>
+                <strong className="text-foreground">Business Address:</strong><br />
+                EmojiKart<br />
+                123 Digital Street, Suite 456<br />
+                San Francisco, CA 94102<br />
+                United States
+              </p>
+              <p>
                 <strong className="text-foreground">Response Time:</strong> 24-48 hours
               </p>
               <p className="text-sm mt-4">
