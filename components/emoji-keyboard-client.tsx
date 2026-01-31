@@ -429,7 +429,7 @@ export function EmojiKeyboardClient() {
 
       {/* Google AdSense is disabled while we don't serve ads. */}
 
-      <div className="flex min-h-screen bg-background">
+      <div className="flex min-h-screen bg-background h-screen md:h-auto overflow-hidden">
         {/* Mobile Overlay */}
         {sidebarOpen && (
           <div
@@ -715,7 +715,7 @@ export function EmojiKeyboardClient() {
         </aside>
 
         {/* Main Content - With Left Margin for Fixed Sidebar */}
-        <main className="flex-1 flex flex-col md:ml-72 w-full h-screen md:h-auto md:min-h-screen overflow-hidden md:overflow-visible">
+        <main className="flex-1 flex flex-col md:ml-72 w-full h-screen md:h-auto md:min-h-screen overflow-hidden">
           {/* Header - Fixed */}
           <header
             ref={headerRef}

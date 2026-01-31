@@ -128,13 +128,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    height: 100%;
+    overflow: hidden;
+  }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
-  html {
-    overflow-x: hidden;
+    height: 100%;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
   }
   /* Emoji font fallbacks for better cross-platform support */
