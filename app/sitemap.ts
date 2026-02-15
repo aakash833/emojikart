@@ -18,12 +18,12 @@ const categorySlugs: Record<string, string> = {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://emojikart.com"; // Replace with your actual domain
 
-  // Category pages
+  // Category pages (high priority for SEO)
   const categoryPages = Object.keys(categorySlugs).map((slug) => ({
     url: `${baseUrl}/${slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: 0.8,
+    priority: 0.9,
   }));
 
   // Individual emoji pages
@@ -37,18 +37,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Feature pages (high priority for SEO)
   const featurePages = [
-    { url: `${baseUrl}/emoji-generator`, priority: 0.9 },
-    { url: `${baseUrl}/emoji-meanings`, priority: 0.9 },
-    { url: `${baseUrl}/emoji-trends`, priority: 0.9 },
-    { url: `${baseUrl}/gifs`, priority: 0.9 },
-    { url: `${baseUrl}/gifs/trending`, priority: 0.85 },
-    { url: `${baseUrl}/gifs/categories`, priority: 0.85 },
-    { url: `${baseUrl}/blog`, priority: 0.85 },
+    { url: `${baseUrl}/emoji-generator`, priority: 0.95, changeFreq: "weekly" as const },
+    { url: `${baseUrl}/emoji-meanings`, priority: 0.95, changeFreq: "weekly" as const },
+    { url: `${baseUrl}/emoji-trends`, priority: 0.95, changeFreq: "weekly" as const },
+    { url: `${baseUrl}/gifs`, priority: 0.9, changeFreq: "daily" as const },
+    { url: `${baseUrl}/gifs/trending`, priority: 0.9, changeFreq: "daily" as const },
+    { url: `${baseUrl}/gifs/categories`, priority: 0.85, changeFreq: "weekly" as const },
+    { url: `${baseUrl}/blog`, priority: 0.9, changeFreq: "daily" as const },
   ].map((page) => ({
     url: page.url,
     lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: page.priority as 0.9 | 0.85,
+    changeFrequency: page.changeFreq,
+    priority: page.priority,
   }));
 
   // Blog posts (high priority for SEO and content)

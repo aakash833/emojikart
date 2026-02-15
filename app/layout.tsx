@@ -13,13 +13,13 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://emojikart.com"), // Replace with your actual domain
+  metadataBase: new URL("https://emojikart.com"),
   title: {
-    default: "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
-    template: "%s | Emoji keyboard online 😊 - Click to copy 🔥 emoji",
+    default: "Free Online Emoji Keyboard 😊 - Copy & Paste 3000+ Emojis Instantly | EmojiKart",
+    template: "%s | EmojiKart - Free Online Emoji Keyboard",
   },
   description:
-    "Emoji keyboard online 😊 - Click to copy 🔥 emoji - Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. ✂️ Copy and 📋 Paste Emoji 👍 No apps required",
+    "Free online emoji keyboard with 3000+ emojis to copy and paste instantly. No download required. Works on all devices. Copy emojis for Twitter, Facebook, Instagram, WhatsApp, Slack, Snapchat, GitHub, email, and more. ✂️ Copy and 📋 Paste Emoji 👍 100% Free Forever",
   keywords: [
     "emoji keyboard",
     "emoji keyboard online",
@@ -48,9 +48,12 @@ export const metadata: Metadata = {
     "emoji for snapchat",
     "emoji for github",
   ],
-  authors: [{ name: "Emoji Keyboard" }],
-  creator: "Emoji Keyboard",
-  publisher: "Emoji Keyboard",
+  authors: [{ name: "EmojiKart", url: "https://emojikart.com" }],
+  creator: "EmojiKart",
+  publisher: "EmojiKart",
+  applicationName: "EmojiKart",
+  category: "Tools",
+  classification: "Utility",
   formatDetection: {
     email: false,
     address: false,
@@ -279,7 +282,6 @@ export default function RootLayout({
             <NavigationLoader />
             <div className="flex flex-col h-screen overflow-hidden">
               {children}
-              <Footer />
             </div>
             <Analytics />
           </ThemeProvider>

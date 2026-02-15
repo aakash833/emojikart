@@ -226,37 +226,90 @@ export default async function EmojiPage({ params }: Props) {
             <Card>
               <CardHeader>
                 <CardTitle>About {displayName} Emoji</CardTitle>
+                <CardDescription>
+                  Learn everything about the {displayName} emoji {emoji.emoji} - its meaning, usage, and how to use it effectively
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div>
-                  <h3 className="font-semibold mb-2">
+                  <h3 className="font-semibold mb-3 text-lg">
                     What does {displayName} emoji mean?
                   </h3>
-                  <p className="text-muted-foreground">
-                    The {displayName} emoji {emoji.emoji} is commonly used to
-                    express {emoji.keywords?.join(", ") || "emotions"}. It's
-                    part of the {emoji.category} category and can be used in
-                    various contexts including social media, messaging, and
-                    digital communication.
+                  <p className="text-foreground leading-relaxed mb-3">
+                    The {displayName} emoji {emoji.emoji} is commonly used to express {emoji.keywords?.slice(0, 3).join(", ") || "emotions and feelings"}. 
+                    It&apos;s part of the <strong>{emoji.category}</strong> category and represents one of the most versatile emojis 
+                    in digital communication. This emoji can convey various meanings depending on the context in which it&apos;s used.
+                  </p>
+                  <p className="text-foreground leading-relaxed">
+                    Emojis like {displayName} have become an essential part of modern digital communication, allowing people to express 
+                    emotions, ideas, and concepts that might be difficult to convey with words alone. The {displayName} emoji is 
+                    particularly useful in social media posts, text messages, emails, and any form of digital communication where 
+                    you want to add emotional context or visual interest.
                   </p>
                 </div>
 
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                  <h3 className="font-semibold mb-3 text-lg">Common Uses of {displayName} Emoji</h3>
+                  <ul className="list-disc pl-6 space-y-2 text-foreground">
+                    <li>Expressing {emoji.keywords?.[0] || "emotions"} in social media posts</li>
+                    <li>Adding visual interest to text messages and emails</li>
+                    <li>Enhancing social media captions and stories</li>
+                    <li>Creating engaging content for blogs and websites</li>
+                    <li>Making professional communications more friendly and approachable</li>
+                    <li>Conveying tone and emotion in digital conversations</li>
+                  </ul>
+                </div>
+
                 <div>
-                  <h3 className="font-semibold mb-2">How to Use</h3>
-                  <ol className="list-decimal pl-6 space-y-2 text-muted-foreground">
+                  <h3 className="font-semibold mb-3 text-lg">How to Use {displayName} Emoji</h3>
+                  <p className="text-foreground mb-3">
+                    Using the {displayName} emoji is simple and straightforward. Follow these steps to copy and use it in your communications:
+                  </p>
+                  <ol className="list-decimal pl-6 space-y-3 text-foreground">
                     <li>
-                      Click the "Copy Emoji" button above to copy the emoji to
-                      your clipboard
+                      <strong>Copy the Emoji:</strong> Click the &quot;Copy Emoji&quot; button at the top of this page to instantly 
+                      copy the {displayName} emoji {emoji.emoji} to your clipboard. You can also click directly on the large emoji 
+                      display above.
                     </li>
                     <li>
-                      Paste it in any app or platform (Twitter, Facebook,
-                      Instagram, WhatsApp, etc.)
+                      <strong>Paste Anywhere:</strong> Once copied, paste the emoji in any app or platform that supports emojis. 
+                      This includes Twitter, Facebook, Instagram, WhatsApp, Slack, Snapchat, GitHub, email clients, messaging apps, 
+                      and more. Simply use Ctrl+V (Windows/Linux) or Cmd+V (Mac) to paste.
                     </li>
                     <li>
-                      Use it to express {emoji.keywords?.[0] || "your feelings"}{" "}
-                      in your messages
+                      <strong>Use Appropriately:</strong> Use the {displayName} emoji to express {emoji.keywords?.[0] || "your feelings"} 
+                      in your messages. Consider the context and your audience when using emojis, especially in professional settings.
+                    </li>
+                    <li>
+                      <strong>Combine with Text:</strong> Emojis work best when combined with text to add emotional context. 
+                      Use the {displayName} emoji to enhance your message, not replace it entirely.
                     </li>
                   </ol>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                  <h3 className="font-semibold mb-3 text-lg">Best Practices</h3>
+                  <ul className="list-disc pl-6 space-y-2 text-foreground">
+                    <li>Use emojis to add emotion and context to your messages</li>
+                    <li>Don&apos;t overuse emojis—moderation is key to effective communication</li>
+                    <li>Consider your audience—professional contexts may require fewer emojis</li>
+                    <li>Test emojis on different platforms to ensure they display correctly</li>
+                    <li>Be aware that emoji meanings can vary across cultures and contexts</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold mb-3 text-lg">Platform Compatibility</h3>
+                  <p className="text-foreground mb-3">
+                    The {displayName} emoji {emoji.emoji} is compatible with all major platforms and operating systems, including:
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {["Twitter", "Facebook", "Instagram", "WhatsApp", "Slack", "Snapchat", "GitHub", "Email", "SMS"].map((platform) => (
+                      <div key={platform} className="bg-card border rounded-lg p-2 text-center text-sm">
+                        <span className="text-foreground">{platform}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>

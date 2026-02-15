@@ -1,49 +1,121 @@
 import Link from "next/link";
+import { Heart, Mail, ExternalLink } from "lucide-react";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="w-full border-t border-border bg-card/50 py-4 pl-0 md:pl-72 mt-auto">
-      <div className="container mx-auto px-4 text-sm text-muted-foreground flex flex-col md:flex-row items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
-          <Link href="/" className="hover:text-foreground">
-            Home
-          </Link>
-          {/* <Link href="/emoji-generator" className="hover:text-foreground">
-            Emoji Generator
-          </Link>
-          <Link href="/emoji-meanings" className="hover:text-foreground">
-            Emoji Meanings
-          </Link>
-          <Link href="/emoji-trends" className="hover:text-foreground">
-            Emoji Trends
-          </Link> */}
-          <Link href="/gifs" className="hover:text-foreground">
-            GIF Search
-          </Link>
-          <Link href="/gifs/trending" className="hover:text-foreground">
-            Trending GIFs
-          </Link>
-          <Link href="/blog" className="hover:text-foreground">
-            Blog
-          </Link>
-          <Link href="/about" className="hover:text-foreground">
-            About
-          </Link>
-          <Link href="/contact" className="hover:text-foreground">
-            Contact
-          </Link>
-          <Link href="/privacy-policy" className="hover:text-foreground">
-            Privacy Policy
-          </Link>
-          <Link href="/terms-and-conditions" className="hover:text-foreground">
-            Terms & Conditions
-          </Link>
-          <Link href="/refund-policy" className="hover:text-foreground">
-            Refund Policy
-          </Link>
+    <footer className="w-full border-t border-border/50 bg-card/95 backdrop-blur-xl py-8 mt-8 z-10 relative">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
+          {/* About Section */}
+          <div>
+            <h3 className="font-semibold text-foreground mb-3">About EmojiKart</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Your free online emoji keyboard with thousands of emojis to copy and paste instantly. 
+              No registration required, completely free forever.
+            </p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for better communication
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-semibold text-foreground mb-3">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/emoji-generator" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Emoji Generator
+                </Link>
+              </li>
+              <li>
+                <Link href="/emoji-meanings" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Emoji Meanings
+                </Link>
+              </li>
+              <li>
+                <Link href="/emoji-trends" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Emoji Trends
+                </Link>
+              </li>
+              <li>
+                <Link href="/gifs" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  GIF Search
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Blog
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h3 className="font-semibold text-foreground mb-3">Resources</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/about" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-foreground/80 hover:text-foreground hover:underline transition-colors flex items-center gap-1">
+                  Contact Us
+                  <Mail className="w-3 h-3" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/gifs/trending" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Trending GIFs
+                </Link>
+              </li>
+              <li>
+                <Link href="/gifs/categories" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  GIF Categories
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h3 className="font-semibold text-foreground mb-3">Legal</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/privacy-policy" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/refund-policy" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Refund Policy
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="text-muted-foreground">
-          © {new Date().getFullYear()} Emoji Keyboard
+
+        {/* Bottom Bar */}
+        <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="text-center md:text-left">
+            © {currentYear} EmojiKart. All rights reserved. Free online emoji keyboard for everyone.
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-xs">Free • No Registration • Privacy-First</span>
+          </div>
         </div>
       </div>
     </footer>

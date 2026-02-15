@@ -31,6 +31,7 @@ import {
   BookOpen,
   TrendingUp,
   Image,
+  Zap,
 } from "lucide-react";
 import Script from "next/script";
 import Link from "next/link";
@@ -40,6 +41,7 @@ import { StructuredData } from "@/components/structured-data";
 import { HomePage } from "@/components/home-page";
 import { EmojiTooltip } from "@/components/emoji-tooltip";
 import { AdBanner } from "@/components/ad-banner";
+import Footer from "@/components/footer";
 import dynamic from "next/dynamic";
 const AdUnit = dynamic(() => import("../components/ad-unit"), {
   ssr: false,
@@ -130,19 +132,49 @@ export function EmojiKeyboardClient() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     getInitialCategory()
   );
-  // Initialize with default values to prevent hydration mismatch
-  // Will be updated from localStorage after hydration
-  const [emojiSize, setEmojiSize] = useState<EmojiSize>("M");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   
-  // Load from localStorage after hydration (client-side only)
+  // Initialize emojiSize from localStorage immediately to prevent reset on navigation
+  const getInitialEmojiSize = (): EmojiSize => {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return "M";
+    }
+    try {
+      const savedSize = localStorage.getItem("emojiSize");
+      if (savedSize && ["S", "M", "L", "XL", "XXL"].includes(savedSize)) {
+        return savedSize as EmojiSize;
+      }
+    } catch (e) {
+      // Silently fail if localStorage is not available
+    }
+    return "M";
+  };
+  
+  // Initialize theme from localStorage immediately
+  const getInitialTheme = (): boolean => {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") {
+      return false;
+    }
+    try {
+      const savedTheme = localStorage.getItem("theme");
+      return savedTheme === "dark";
+    } catch (e) {
+      // Silently fail if localStorage is not available
+    }
+    return false;
+  };
+  
+  const [emojiSize, setEmojiSize] = useState<EmojiSize>(getInitialEmojiSize);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(getInitialTheme);
+  
+  // Sync with localStorage changes from other tabs/windows
   useEffect(() => {
     // Check if localStorage is available (may not be in AdSense preview or restricted environments)
     if (typeof window === "undefined" || typeof localStorage === "undefined") {
       return;
     }
 
+    // Double-check on mount to ensure we have the latest value
     try {
       const savedSize = localStorage.getItem("emojiSize");
       if (savedSize && ["S", "M", "L", "XL", "XXL"].includes(savedSize)) {
@@ -150,9 +182,6 @@ export function EmojiKeyboardClient() {
       }
     } catch (e) {
       // Silently fail if localStorage is not available
-      if (process.env.NODE_ENV === "development") {
-        console.warn("Failed to load emojiSize from localStorage:", e);
-      }
     }
     
     try {
@@ -160,9 +189,6 @@ export function EmojiKeyboardClient() {
       setIsDarkMode(savedTheme === "dark");
     } catch (e) {
       // Silently fail if localStorage is not available
-      if (process.env.NODE_ENV === "development") {
-        console.warn("Failed to load theme from localStorage:", e);
-      }
     }
   }, []);
   const [copiedEmoji, setCopiedEmoji] = useState<{
@@ -439,29 +465,37 @@ export function EmojiKeyboardClient() {
           />
         )}
 
-        {/* Left Sidebar / Mobile Drawer */}
+        {/* Left Sidebar / Mobile Drawer - Modern Design */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-screen border-r border-border bg-gradient-to-b from-card to-card/95 flex flex-col shadow-lg z-40 transition-transform duration-300 ease-in-out overflow-hidden",
+            "fixed left-0 top-0 h-screen border-r border-border/50 bg-card/95 backdrop-blur-xl flex flex-col shadow-soft-lg z-40 transition-all duration-300 ease-in-out overflow-hidden",
             // Desktop: fixed width sidebar; Mobile: full-width drawer
-            "w-full md:w-72",
+            "w-full md:w-80",
             // When closed on mobile, hide it by translating left
             sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
           )}
         >
-          {/* Sidebar Header - Fixed */}
-          <div className="p-4 border-b border-border bg-gradient-to-r from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/20 dark:to-purple-950/20 flex-shrink-0 flex items-center justify-between">
-            <Link href="/" className="w-full flex items-center gap-3">
-              <div className="w-full text-2xl font-bold text-foreground flex items-center justify-between">
-                <div> emojiKart</div>
-                <div className="text-3xl">🔥</div>
+          {/* Sidebar Header - Modern Design */}
+          <div className="p-6 border-b border-border/50 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 dark:from-indigo-500/20 dark:via-purple-500/20 dark:to-pink-500/20 flex-shrink-0 flex items-center justify-between backdrop-blur-sm">
+            <Link href="/" className="w-full flex items-center gap-3 group">
+              <div className="w-full flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-2xl">😊</span>
+                  </div>
+                  <div>
+                    <div className="text-xl font-bold text-foreground tracking-tight">emojiKart</div>
+                    <div className="text-xs text-muted-foreground">Free Emoji Keyboard</div>
+                  </div>
+                </div>
+                <div className="text-3xl animate-pulse">🔥</div>
               </div>
             </Link>
-            {/* Mobile-only close button inside the drawer */}
+            {/* Mobile-only close button */}
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden rounded-lg hover:bg-accent/50"
               onClick={() => setSidebarOpen(false)}
               aria-label="Close sidebar"
             >
@@ -474,12 +508,13 @@ export function EmojiKeyboardClient() {
             <AdBanner position="sidebar" />
           </div> */}
 
-          {/* Categories Section - Scrollable */}
+          {/* Categories Section - Scrollable with Modern Design */}
           <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain pb-2">
-            <div className="p-5 pb-4 space-y-6">
+            <div className="p-6 pb-4 space-y-8">
               {/* Tools & Features Section */}
               <div>
-                <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                <h2 className="text-xs font-bold text-muted-foreground mb-4 uppercase tracking-wider flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5" />
                   Tools & Features
                 </h2>
                 <nav className="space-y-2">
@@ -554,10 +589,11 @@ export function EmojiKeyboardClient() {
                       setSidebarOpen(false);
                     }}
                     className={cn(
-                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                      "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300",
                       "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
-                      "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
-                      pathname === "/blog" && "bg-indigo-100 dark:bg-indigo-900/30"
+                      "hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-md hover:scale-[1.02]",
+                      "border border-transparent active:scale-[0.98]",
+                      pathname === "/blog" && "bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 shadow-md border-indigo-200 dark:border-indigo-800"
                     )}
                   >
                     <BookOpen className="w-4 h-4" />
@@ -606,12 +642,13 @@ export function EmojiKeyboardClient() {
                 </nav>
               </div>
 
-              {/* Categories Section */}
+              {/* Categories Section - Modern Design */}
               <div>
-                <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+                <h2 className="text-xs font-bold text-muted-foreground mb-4 uppercase tracking-wider flex items-center gap-2">
+                  <Hash className="w-3.5 h-3.5" />
                   Categories
                 </h2>
-                <nav className="space-y-2">
+                <nav className="space-y-2.5">
                 {categories.map((category) => {
                   const Icon =
                     categoryIcons[category as keyof typeof categoryIcons];
@@ -630,6 +667,7 @@ export function EmojiKeyboardClient() {
                   const categorySlug =
                     categorySlugMap[category] ||
                     category.toLowerCase().replace(/\s+/g, "-");
+                  const isActive = selectedCategory === category && !searchQuery && pathname !== "/";
                   return (
                     <button
                       key={category}
@@ -643,24 +681,27 @@ export function EmojiKeyboardClient() {
                         "cursor-pointer w-full flex items-center gap-4 px-5 py-4 rounded-xl text-base font-medium transition-all duration-300 relative group",
                         "hover:shadow-lg hover:scale-[1.02] hover:translate-x-1",
                         "active:scale-[0.98]",
-                        selectedCategory === category &&
-                          !searchQuery &&
-                          pathname !== "/"
-                          ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xl shadow-indigo-500/50 scale-[1.02] translate-x-1"
-                          : "text-foreground bg-muted/50 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent"
+                        isActive
+                          ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-xl shadow-indigo-500/40 scale-[1.02] translate-x-1 border-0"
+                          : "text-foreground bg-muted/30 hover:bg-gradient-to-r hover:from-indigo-50/80 hover:to-purple-50/80 dark:hover:from-indigo-950/40 dark:hover:to-purple-950/40 hover:border-indigo-200/50 dark:hover:border-indigo-800/50 border border-border/50 backdrop-blur-sm"
                       )}
                     >
-                      <Icon
-                        className={cn(
-                          "w-5 h-5 shrink-0 transition-transform duration-300",
-                          selectedCategory === category &&
-                            !searchQuery &&
-                            pathname !== "/"
-                            ? "scale-110"
-                            : "group-hover:scale-110 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
-                        )}
-                      />
-                      <span className="text-left flex-1">{category}</span>
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300",
+                        isActive 
+                          ? "bg-white/20 shadow-lg" 
+                          : "bg-muted/50 group-hover:bg-indigo-100/50 dark:group-hover:bg-indigo-900/30"
+                      )}>
+                        <Icon
+                          className={cn(
+                            "w-5 h-5 shrink-0 transition-transform duration-300",
+                            isActive
+                              ? "scale-110 text-white"
+                              : "group-hover:scale-110 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-muted-foreground"
+                          )}
+                        />
+                      </div>
+                      <span className="text-left flex-1 font-semibold">{category}</span>
                       <Link
                         href={`/${categorySlug}`}
                         onClick={(e) => {
@@ -669,12 +710,9 @@ export function EmojiKeyboardClient() {
                           handleCategoryClick(category);
                         }}
                         className={cn(
-                          "text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ml-2 px-2 py-1 rounded-md",
-                          "hover:bg-indigo-100 dark:hover:bg-indigo-900/50",
-                          selectedCategory === category &&
-                            !searchQuery &&
-                            pathname !== "/" &&
-                            "opacity-100"
+                          "text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ml-2 px-2.5 py-1.5 rounded-lg",
+                          "hover:bg-white/20 dark:hover:bg-white/10",
+                          isActive && "opacity-100"
                         )}
                         title={`View ${category} page for better SEO`}
                         aria-label={`Open ${category} page`}
@@ -689,12 +727,13 @@ export function EmojiKeyboardClient() {
             </div>
           </div>
 
-          {/* Emoji Size Section - Fixed at Bottom */}
-          <div className="p-5 border-t border-border bg-gradient-to-t from-muted/30 to-transparent flex-shrink-0 sticky bottom-0 z-10">
-            <h2 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wide">
+          {/* Emoji Size Section - Modern Fixed Bottom */}
+          <div className="p-6 border-t border-border/50 bg-gradient-to-t from-card/95 via-card/80 to-transparent backdrop-blur-sm flex-shrink-0 sticky bottom-0 z-10">
+            <h2 className="text-xs font-bold text-muted-foreground mb-4 uppercase tracking-wider flex items-center gap-2">
+              <Zap className="w-3.5 h-3.5" />
               Emoji Size
             </h2>
-            <div className="flex gap-2">
+            <div className="flex gap-2.5">
               {(["S", "M", "L", "XL", "XXL"] as EmojiSize[]).map((size) => (
                 <button
                   key={size}
@@ -703,8 +742,8 @@ export function EmojiKeyboardClient() {
                     "flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer",
                     "hover:scale-105 hover:shadow-md active:scale-95",
                     emojiSize === size
-                      ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/50 scale-105"
-                      : "bg-muted text-muted-foreground hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30 border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800"
+                      ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-indigo-500/40 scale-105 border-0"
+                      : "bg-muted/50 text-muted-foreground hover:bg-gradient-to-r hover:from-indigo-50/80 hover:to-purple-50/80 dark:hover:from-indigo-950/40 dark:hover:to-purple-950/40 border border-border/50 hover:border-indigo-200/50 dark:hover:border-indigo-800/50 backdrop-blur-sm"
                   )}
                 >
                   {size}
@@ -715,18 +754,18 @@ export function EmojiKeyboardClient() {
         </aside>
 
         {/* Main Content - With Left Margin for Fixed Sidebar */}
-        <main className="flex-1 flex flex-col md:ml-72 w-full h-screen md:h-auto md:min-h-screen overflow-hidden">
-          {/* Header - Fixed */}
+        <main className="flex-1 flex flex-col md:ml-80 w-full h-screen md:h-auto md:min-h-screen overflow-hidden">
+          {/* Header - Modern Fixed Design */}
           <header
             ref={headerRef}
-            className="border-b-2 border-yellow-200 dark:border-yellow-800 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 fixed top-0 right-0 left-0 md:left-72 z-20 px-3 md:px-8 py-3 md:py-6 flex items-center justify-between shadow-md h-[64px] md:h-[88px]"
+            className="border-b border-border/50 bg-card/80 backdrop-blur-xl supports-[backdrop-filter]:bg-card/80 fixed top-0 right-0 left-0 md:left-80 z-20 px-4 md:px-8 py-4 md:py-5 flex items-center justify-between shadow-soft h-[70px] md:h-[80px]"
           >
-            <div className="flex items-center gap-3 w-full">
-              {/* Mobile toggle placed inside header so it aligns with search on small screens */}
+            <div className="flex items-center gap-4 w-full">
+              {/* Mobile toggle */}
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="md:hidden bg-card border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 shadow-sm"
+                className="md:hidden rounded-xl hover:bg-accent/50 active:scale-95 transition-all"
                 onClick={() => {
                   setSidebarOpen(!sidebarOpen);
                   hapticClick();
@@ -739,15 +778,15 @@ export function EmojiKeyboardClient() {
                   <Menu className="w-5 h-5" />
                 )}
               </Button>
-              <div className="flex-1 w-full">
+              <div className="flex-1 w-full max-w-2xl">
                 <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-yellow-500 transition-colors z-10" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors z-10" />
                   <Input
                     type="text"
                     placeholder="Search emojis by name (e.g., happy, love, food)..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-10 py-3 md:py-6 text-sm md:text-base bg-background border-2 border-yellow-200 dark:border-yellow-800 rounded-xl focus:border-yellow-400 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-400/30 dark:focus:ring-yellow-600/30 transition-all duration-200 shadow-sm hover:shadow-md w-full"
+                    className="pl-12 pr-12 py-3 md:py-4 text-sm md:text-base bg-background/50 backdrop-blur-sm border-2 border-border rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 shadow-soft hover:shadow-md w-full"
                   />
                   {searchQuery && (
                     <button
@@ -755,7 +794,7 @@ export function EmojiKeyboardClient() {
                         setSearchQuery("");
                         hapticClick();
                       }}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-full transition-all duration-200 hover:scale-110"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 w-7 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-all duration-200 hover:scale-110"
                       aria-label="Clear search"
                     >
                       ×
@@ -763,7 +802,7 @@ export function EmojiKeyboardClient() {
                   )}
                   {searchQuery && (
                     <div className="absolute right-12 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                      <Sparkles className="w-5 h-5 text-yellow-500" />
+                      <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                     </div>
                   )}
                 </div>
@@ -776,13 +815,13 @@ export function EmojiKeyboardClient() {
                 setIsDarkMode(!isDarkMode);
                 hapticClick();
               }}
-              className="cursor-pointer ml-6 w-12 h-12 rounded-xl hover:bg-yellow-100 dark:hover:bg-yellow-900/30 active:scale-95 transition-all duration-200 border-2 border-yellow-200 dark:border-yellow-800 hover:border-yellow-400 dark:hover:border-yellow-600"
+              className="cursor-pointer ml-4 w-11 h-11 rounded-xl hover:bg-accent/50 active:scale-95 transition-all duration-200 border border-border hover:border-primary/50"
               aria-label="Toggle theme"
             >
               {isDarkMode ? (
-                <Sun className="w-6 h-6 text-yellow-500" />
+                <Sun className="w-5 h-5 text-primary" />
               ) : (
-                <Moon className="w-6 h-6 text-yellow-500" />
+                <Moon className="w-5 h-5 text-primary" />
               )}
             </Button>
           </header>
@@ -790,7 +829,7 @@ export function EmojiKeyboardClient() {
           {/* Emoji Grid - Scrollable Content Only */}
           <div
             ref={emojiGridRef}
-            className="flex-1 overflow-y-auto overflow-x-hidden mt-[64px] md:mt-[88px] mb-4 md:mb-0 relative overscroll-contain w-full"
+            className="flex-1 overflow-y-auto overflow-x-hidden mt-[70px] md:mt-[80px] relative overscroll-contain w-full"
             style={{ 
               WebkitOverflowScrolling: 'touch',
               minHeight: 0
@@ -926,6 +965,9 @@ export function EmojiKeyboardClient() {
                 </>
               )}
             </div>
+            
+            {/* Footer inside scrollable area */}
+            <Footer />
           </div>
         </main>
 
