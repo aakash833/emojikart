@@ -54,13 +54,30 @@ const GifDetailClient = dynamic(() => import("../components/gif-detail-client").
 const EmojiGeneratorClient = dynamic(() => import("../components/emoji-generator-client").then(m => ({ default: m.EmojiGeneratorClient })), { ssr: false });
 const EmojiMeaningsClient = dynamic(() => import("../components/emoji-meanings-client").then(m => ({ default: m.EmojiMeaningsClient })), { ssr: false });
 const EmojiTrendsClient = dynamic(() => import("../components/emoji-trends-client").then(m => ({ default: m.EmojiTrendsClient })), { ssr: false });
-const BlogPageClient = dynamic(() => import("../components/blog-page-client").then(m => ({ default: m.BlogPageClient })), { ssr: false });
-const BlogPostClient = dynamic(() => import("../components/blog-post-client").then(m => ({ default: m.BlogPostClient })), { ssr: false });
-const AboutPageClient = dynamic(() => import("../components/about-page-client").then(m => ({ default: m.AboutPageClient })), { ssr: false });
-const ContactPageClient = dynamic(() => import("../components/contact-page-client").then(m => ({ default: m.ContactPageClient })), { ssr: false });
-const PrivacyPolicyClient = dynamic(() => import("../components/privacy-policy-client").then(m => ({ default: m.PrivacyPolicyClient })), { ssr: false });
-const TermsAndConditionsClient = dynamic(() => import("../components/terms-and-conditions-client").then(m => ({ default: m.TermsAndConditionsClient })), { ssr: false });
-const RefundPolicyClient = dynamic(() => import("../components/refund-policy-client").then(m => ({ default: m.RefundPolicyClient })), { ssr: false });
+// SSR enabled so crawlers (including AdSense / Google) receive full HTML for trust & editorial pages.
+const BlogPageClient = dynamic(() =>
+  import("../components/blog-page-client").then((m) => ({ default: m.BlogPageClient })),
+);
+const BlogPostClient = dynamic(() =>
+  import("../components/blog-post-client").then((m) => ({ default: m.BlogPostClient })),
+);
+const AboutPageClient = dynamic(() =>
+  import("../components/about-page-client").then((m) => ({ default: m.AboutPageClient })),
+);
+const ContactPageClient = dynamic(() =>
+  import("../components/contact-page-client").then((m) => ({ default: m.ContactPageClient })),
+);
+const PrivacyPolicyClient = dynamic(() =>
+  import("../components/privacy-policy-client").then((m) => ({ default: m.PrivacyPolicyClient })),
+);
+const TermsAndConditionsClient = dynamic(() =>
+  import("../components/terms-and-conditions-client").then((m) => ({
+    default: m.TermsAndConditionsClient,
+  })),
+);
+const RefundPolicyClient = dynamic(() =>
+  import("../components/refund-policy-client").then((m) => ({ default: m.RefundPolicyClient })),
+);
 
 type EmojiSize = "S" | "M" | "L" | "XL" | "XXL";
 

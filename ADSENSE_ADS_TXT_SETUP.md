@@ -1,9 +1,10 @@
 # AdSense ads.txt File Setup
 
-## ✅ ads.txt File Created
+## ✅ ads.txt (route + public)
 
-The `ads.txt` file has been created in the `public` folder and will be accessible at:
-**https://emojikart.com/ads.txt**
+**Primary:** `app/ads.txt/route.ts` serves **`text/plain; charset=utf-8`** at **https://emojikart.com/ads.txt** so AdSense and other crawlers reliably detect the file (fixes many “Not found” cases).
+
+**Backup:** `public/ads.txt` mirrors the same line if your host prefers static files.
 
 ---
 
