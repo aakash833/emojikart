@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="w-full border-t border-border/50 bg-card/95 backdrop-blur-xl py-8 mt-8 z-10 relative">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-6">
           {/* About Section */}
           <div>
             <h3 className="font-semibold text-foreground mb-3">About EmojiKart</h3>
@@ -52,6 +52,51 @@ export default function Footer() {
               <li>
                 <Link href="/blog" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
                   Blog
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="/sitemap.xml"
+                  className="text-foreground/80 hover:text-foreground hover:underline transition-colors"
+                >
+                  XML Sitemap
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Popular categories — internal links for crawl & rankings */}
+          <div>
+            <h3 className="font-semibold text-foreground mb-3">Emoji categories</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/smileys-emotion" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Smileys &amp; emotion
+                </Link>
+              </li>
+              <li>
+                <Link href="/people-body" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  People &amp; body
+                </Link>
+              </li>
+              <li>
+                <Link href="/animals-nature" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Animals &amp; nature
+                </Link>
+              </li>
+              <li>
+                <Link href="/food-drink" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Food &amp; drink
+                </Link>
+              </li>
+              <li>
+                <Link href="/symbols" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Symbols
+                </Link>
+              </li>
+              <li>
+                <Link href="/flags" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Flags
                 </Link>
               </li>
             </ul>

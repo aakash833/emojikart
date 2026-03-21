@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { emojiData } from "@/lib/emoji-data";
 import { getAllEmojis } from "@/lib/get-all-emojis";
 import { getTrendingGiphyGIFs } from "@/lib/giphy-api";
+import { SITE_URL } from "@/lib/site";
 
 const categorySlugs: Record<string, string> = {
   "smileys-emotion": "Smileys & Emotion",
@@ -16,7 +17,7 @@ const categorySlugs: Record<string, string> = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://emojikart.com"; // Replace with your actual domain
+  const baseUrl = SITE_URL;
 
   // Category pages (high priority for SEO)
   const categoryPages = Object.keys(categorySlugs).map((slug) => ({

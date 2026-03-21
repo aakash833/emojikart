@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { emojiData } from "@/lib/emoji-data";
 import { EmojiCategoryPage } from "@/components/emoji-category-page";
 import { StructuredData } from "@/components/structured-data";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import Script from "next/script";
 
 const categorySlugs: Record<string, string> = {
@@ -68,9 +69,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const category = categorySlugs[params.slug];
+  const { slug } = await params;
+  const category = categorySlugs[slug];
   if (!category) {
     return {
       title: "Category Not Found",
@@ -79,9 +81,9 @@ export async function generateMetadata({
 
   const emojiCount = emojiData[category]?.length || 0;
   const description =
-    categoryDescriptions[params.slug] ||
+    categoryDescriptions[slug] ||
     `Browse ${emojiCount} emojis in the ${category} category.`;
-  const longDescription = categoryLongDescriptions[params.slug] || description;
+  const longDescription = categoryLongDescriptions[slug] || description;
 
   // Enhanced keywords for better SEO
   const baseKeywords = [
@@ -169,40 +171,40 @@ export async function generateMetadata({
 
   const allKeywords = [
     ...baseKeywords,
-    ...(categorySpecificKeywords[category] || []),
+    ...(categorySpecificKeywords[slug] || []),
   ].join(", ");
 
   return {
-    title: `${category} Emojis - Copy ${emojiCount}+ ${category} Emojis Instantly | Free Emoji Keyboard`,
+    title: `${category} Emojis — Copy ${emojiCount}+ Free ${category} Emojis | ${SITE_NAME}`,
     description: longDescription,
     keywords: allKeywords,
-    authors: [{ name: "Emoji Keyboard" }],
-    creator: "Emoji Keyboard",
-    publisher: "Emoji Keyboard",
+    authors: [{ name: SITE_NAME, url: SITE_URL }],
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
     openGraph: {
-      title: `${category} Emojis - ${emojiCount}+ Free Emojis to Copy | Emoji Keyboard`,
+      title: `${category} Emojis — ${emojiCount}+ to Copy & Paste | ${SITE_NAME}`,
       description: longDescription,
       type: "website",
-      url: `https://emojikart.com/category/${params.slug}`,
-      siteName: "Emoji Keyboard",
+      url: `${SITE_URL}/category/${slug}`,
+      siteName: `${SITE_NAME} — Free online emoji keyboard`,
       locale: "en_US",
       images: [
         {
-          url: `https://emojikart.com/category/${params.slug}/opengraph-image`,
+          url: `${SITE_URL}/category/${slug}/opengraph-image`,
           width: 1200,
           height: 630,
-          alt: `${category} Emojis - ${emojiCount}+ Emojis Available`,
+          alt: `${category} emojis — ${emojiCount}+ on ${SITE_NAME}`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${category} Emojis - ${emojiCount}+ Free Emojis`,
+      title: `${category} Emojis — ${emojiCount}+ Free | ${SITE_NAME}`,
       description: description,
-      images: [`https://emojikart.com/category/${params.slug}/opengraph-image`],
+      images: [`${SITE_URL}/category/${slug}/opengraph-image`],
     },
     alternates: {
-      canonical: `https://emojikart.com/category/${params.slug}`,
+      canonical: `${SITE_URL}/category/${slug}`,
     },
     robots: {
       index: true,
@@ -223,15 +225,20 @@ export async function generateMetadata({
   };
 }
 
-export default function CategoryPage({ params }: { params: { slug: string } }) {
-  const category = categorySlugs[params.slug];
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const category = categorySlugs[slug];
   if (!category || !emojiData[category]) {
     notFound();
   }
 
   const emojiCount = emojiData[category]?.length || 0;
   const description =
-    categoryDescriptions[params.slug] ||
+    categoryDescriptions[slug] ||
     `Browse ${emojiCount} emojis in the ${category} category.`;
 
   // Enhanced structured data for better SEO
@@ -240,7 +247,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     "@type": "CollectionPage",
     name: `${category} Emojis`,
     description: description,
-    url: `https://emojikart.com/category/${params.slug}`,
+    url: `${SITE_URL}/category/${slug}`,
     numberOfItems: emojiCount,
     mainEntity: {
       "@type": "ItemList",
@@ -264,13 +271,13 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://emojikart.com",
+          item: SITE_URL,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: category,
-          item: `https://emojikart.com/category/${params.slug}`,
+          item: `${SITE_URL}/category/${slug}`,
         },
       ],
     },
@@ -321,7 +328,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <EmojiCategoryPage category={category} slug={params.slug} />
+      <EmojiCategoryPage category={category} slug={slug} />
     </>
   );
 }

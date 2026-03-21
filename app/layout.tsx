@@ -7,19 +7,22 @@ import { ThemeProvider } from "@/components/theme-provider";
 import NavigationLoader from "@/components/navigation-loader";
 import { StructuredData } from "@/components/structured-data";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
+const googleSiteVerification =
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://emojikart.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Free Online Emoji Keyboard 😊 - Copy & Paste 3000+ Emojis Instantly | EmojiKart",
-    template: "%s | EmojiKart - Free Online Emoji Keyboard",
+    default: "Free Online Emoji Keyboard — Copy & Paste 3,000+ Emojis | EmojiKart",
+    template: "%s | EmojiKart",
   },
-  description:
-    "Free online emoji keyboard with 3000+ emojis to copy and paste instantly. No download required. Works on all devices. Copy emojis for Twitter, Facebook, Instagram, WhatsApp, Slack, Snapchat, GitHub, email, and more. ✂️ Copy and 📋 Paste Emoji 👍 100% Free Forever",
+  description: SITE_DESCRIPTION,
   keywords: [
     "emoji keyboard",
     "emoji keyboard online",
@@ -48,10 +51,10 @@ export const metadata: Metadata = {
     "emoji for snapchat",
     "emoji for github",
   ],
-  authors: [{ name: "EmojiKart", url: "https://emojikart.com" }],
-  creator: "EmojiKart",
-  publisher: "EmojiKart",
-  applicationName: "EmojiKart",
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  applicationName: SITE_NAME,
   category: "Tools",
   classification: "Utility",
   formatDetection: {
@@ -62,25 +65,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://emojikart.com", // Replace with your actual domain
-    siteName: "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
-    title: "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
-    description:
-      "Emoji keyboard online 😊 - Click to copy 🔥 emoji - Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. ✂️ Copy and 📋 Paste Emoji 👍 No apps required",
+    url: SITE_URL,
+    siteName: `${SITE_NAME} — Free online emoji keyboard`,
+    title: `${SITE_NAME} — Free online emoji keyboard`,
+    description: SITE_DESCRIPTION,
     images: [
       {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Emoji Keyboard",
+        alt: `${SITE_NAME} — free online emoji keyboard and copy-paste picker`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
-    description:
-      "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more.",
+    title: `${SITE_NAME} — Free online emoji keyboard`,
+    description: SITE_DESCRIPTION,
     images: ["/og-image.svg"],
   },
   robots: {
@@ -94,14 +95,10 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code", // Add your Google Search Console verification code
-  },
-  alternates: {
-    canonical: "https://emojikart.com", // Replace with your actual domain
-  },
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
   generator: "Next.js",
-  applicationName: "Emoji Keyboard",
   referrer: "origin-when-cross-origin",
   icons: {
     icon: [
@@ -159,9 +156,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href="https://emojikart.com" />
         <meta name="robots" content="index, follow" />
-        <link rel="preconnect" href="https://emojikart.com" />
+        <link rel="preconnect" href={SITE_URL} />
         <link rel="preload" href="/og-image.svg" as="image" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />
@@ -185,8 +181,6 @@ export default function RootLayout({
         />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
-        {/* Google Search Console Site Verification - Add your verification code */}
-        <meta name="google-site-verification" content="your-google-verification-code" />
         {/* Additional favicon formats for better browser support */}
         <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192" />
         <link rel="icon" type="image/png" href="/android-chrome-512x512.png" sizes="512x512" />
@@ -197,32 +191,30 @@ export default function RootLayout({
         <meta name="theme-color" content="#6366f1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Emoji Keyboard" />
-        <meta property="og:site_name" content="Emoji keyboard online 😊 - Click to copy 🔥 emoji" />
-        {/* Additional SEO meta tags */}
-        <meta name="application-name" content="Emoji keyboard online 😊 - Click to copy 🔥 emoji" />
-        <meta name="apple-mobile-web-app-title" content="Emoji keyboard online 😊 - Click to copy 🔥 emoji" />
+        <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
+        <meta property="og:site_name" content={`${SITE_NAME} — Free online emoji keyboard`} />
+        <meta name="application-name" content={SITE_NAME} />
         <meta name="msapplication-TileColor" content="#6366f1" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         {/* Enhanced Open Graph for better social sharing */}
-        <meta property="og:image:alt" content="Emoji keyboard online 😊 - Free online emoji picker" />
+        <meta property="og:image:alt" content={`${SITE_NAME} — free online emoji keyboard`} />
         <meta property="og:locale:alternate" content="en_US" />
         {/* Twitter Card enhancements */}
         <meta name="twitter:site" content="@emojikart" />
         <meta name="twitter:creator" content="@emojikart" />
         {/* Additional favicon and logo references for Google */}
-        <link rel="image_src" href="https://emojikart.com/logo.svg" />
-        <meta itemProp="image" content="https://emojikart.com/logo.svg" />
+        <link rel="image_src" href={`${SITE_URL}/logo.svg`} />
+        <meta itemProp="image" content={`${SITE_URL}/logo.svg`} />
         {/* Open Graph / Twitter card image */}
         <meta
           property="og:image"
-          content="https://emojikart.com/og-image.svg"
+          content={`${SITE_URL}/og-image.svg`}
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta
           name="twitter:image"
-          content="https://emojikart.com/og-image.svg"
+          content={`${SITE_URL}/og-image.svg`}
         />
         <script
           async
@@ -241,37 +233,35 @@ export default function RootLayout({
                 "@graph": [
                   {
                     "@type": "Organization",
-                    "@id": "https://emojikart.com/#organization",
-                    name: "Emoji keyboard online 😊",
-                    url: "https://emojikart.com",
+                    "@id": `${SITE_URL}/#organization`,
+                    name: SITE_NAME,
+                    url: SITE_URL,
                     logo: {
                       "@type": "ImageObject",
-                      "@id": "https://emojikart.com/#logo",
-                      url: "https://emojikart.com/logo.svg",
-                      contentUrl: "https://emojikart.com/logo.svg",
-                      caption: "Emoji keyboard online 😊",
+                      "@id": `${SITE_URL}/#logo`,
+                      url: `${SITE_URL}/logo.svg`,
+                      contentUrl: `${SITE_URL}/logo.svg`,
+                      caption: SITE_NAME,
                       width: 512,
                       height: 512,
                     },
-                    sameAs: [
-                      "https://emojikart.com",
-                    ],
+                    sameAs: [SITE_URL],
                   },
                   {
                     "@type": "WebSite",
-                    "@id": "https://emojikart.com/#website",
-                    url: "https://emojikart.com",
-                    name: "Emoji keyboard online 😊",
-                    description: "Free online emoji keyboard with thousand emojis to copy and paste instantly. Browse smileys, animals, flags, and latest Unicode emojis.",
+                    "@id": `${SITE_URL}/#website`,
+                    url: SITE_URL,
+                    name: SITE_NAME,
+                    description: SITE_DESCRIPTION,
                     publisher: {
-                      "@id": "https://emojikart.com/#organization",
+                      "@id": `${SITE_URL}/#organization`,
                     },
                     inLanguage: "en-US",
                     potentialAction: {
                       "@type": "SearchAction",
                       target: {
                         "@type": "EntryPoint",
-                        urlTemplate: "https://emojikart.com/?q={search_term_string}",
+                        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
                       },
                       "query-input": "required name=search_term_string",
                     },

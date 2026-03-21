@@ -1,7 +1,7 @@
 {
-  "name": "Emoji keyboard online 😊 - Click to copy 🔥 emoji",
-  "short_name": "Emoji keyboard online 😊",
-  "description": "Emoji keyboard online 😊 - Free online emoji keyboard with thousands of emojis. Copy emojis to your clipboard instantly!",
+  "name": "EmojiKart — Free online emoji keyboard",
+  "short_name": "EmojiKart",
+  "description": "Free online emoji keyboard with 3000+ Unicode emojis. Search, browse categories, copy & paste. GIF search and emoji guides.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

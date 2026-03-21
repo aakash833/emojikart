@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
 import { StructuredData } from "@/components/structured-data";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: {
     default: "Free Online Emoji Keyboard 😊 - Copy & Paste 3000+ Emojis Instantly | EmojiKart",
     template: "%s | EmojiKart - Free Online Emoji Keyboard",
   },
-  description:
-    "Free online emoji keyboard with 3000+ emojis to copy and paste instantly. No download required. Browse smileys, animals, flags, and latest Unicode emojis. Works on all devices. Copy emojis for Twitter, Facebook, Instagram, WhatsApp, Slack, Snapchat, GitHub, email, and more. ✂️ Copy and 📋 Paste Emoji 👍 100% Free Forever",
+  description: SITE_DESCRIPTION,
   keywords: [
     "emoji keyboard",
     "emoji keyboard online",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     "emoji keyboard android",
     "emoji keyboard iphone",
   ],
-  authors: [{ name: "EmojiKart", url: "https://emojikart.com" }],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: "EmojiKart",
   publisher: "EmojiKart",
   robots: {
@@ -69,15 +69,15 @@ export const metadata: Metadata = {
     description:
       "Free online emoji keyboard with 3000+ emojis to copy and paste instantly. No download required. Works on all devices. Copy emojis for Twitter, Facebook, Instagram, WhatsApp, Slack, and more. 100% Free Forever.",
     type: "website",
-    url: "https://emojikart.com",
-    siteName: "EmojiKart - Free Online Emoji Keyboard",
+    url: SITE_URL,
+    siteName: `${SITE_NAME} — Free online emoji keyboard`,
     locale: "en_US",
     images: [
       {
-        url: "https://emojikart.com/og-image.svg",
+        url: `${SITE_URL}/og-image.svg`,
         width: 1200,
         height: 630,
-        alt: "EmojiKart - Free Online Emoji Keyboard",
+        alt: `${SITE_NAME} — free online emoji keyboard`,
       },
     ],
   },
@@ -86,12 +86,12 @@ export const metadata: Metadata = {
     title: "Free Online Emoji Keyboard 😊 - Copy & Paste 3000+ Emojis Instantly",
     description:
       "Free online emoji keyboard with 3000+ emojis. No download required. Copy emojis for Twitter, Facebook, Instagram, WhatsApp, and more. 100% Free Forever.",
-    images: ["https://emojikart.com/og-image.svg"],
+    images: [`${SITE_URL}/og-image.svg`],
     creator: "@emojikart",
     site: "@emojikart",
   },
   alternates: {
-    canonical: "https://emojikart.com",
+    canonical: SITE_URL,
   },
   category: "Tools",
   classification: "Utility",
@@ -182,20 +182,20 @@ export function generateStructuredData() {
   const website = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://emojikart.com/#website",
-    name: "EmojiKart - Free Online Emoji Keyboard",
-    url: "https://emojikart.com",
-    description: "Free online emoji keyboard with 3000+ emojis to copy and paste instantly. No download required. Works on all devices.",
+    "@id": `${SITE_URL}/#website`,
+    name: `${SITE_NAME} — Free online emoji keyboard`,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://emojikart.com?search={search_term_string}",
+        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
     publisher: {
-      "@id": "https://emojikart.com/#organization",
+      "@id": `${SITE_URL}/#organization`,
     },
   };
 

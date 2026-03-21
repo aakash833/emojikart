@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { EmojiKeyboardClient } from "@/components/emoji-keyboard-client";
 import { emojiData } from "@/lib/emoji-data";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const validCategories = [
   "smileys-emotion",
@@ -45,8 +46,8 @@ export async function generateMetadata({
   const emojiCount = emojiData[categoryName]?.length || 0;
 
   return {
-    title: `${categoryName} Emojis - Copy ${emojiCount}+ Emojis Instantly | Emoji keyboard online 😊 - Click to copy 🔥 emoji`,
-    description: `Emoji keyboard online 😊 - Click to copy 🔥 emoji - Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. Copy and paste emojis for Twitter, Facebook, Slack, Instagram, Snapchat, GitHub, WhatsApp and more. Free online emoji keyboard with instant copy and paste. No apps required.`,
+    title: `${categoryName} emojis — copy ${emojiCount}+ free | ${SITE_NAME}`,
+    description: `Browse ${emojiCount}+ ${categoryName.toLowerCase()} Unicode emojis on ${SITE_NAME}. Search, click to copy, paste anywhere—browser-based, no download.`,
     keywords: [
       categoryName.toLowerCase(),
       "emojis",
@@ -68,18 +69,19 @@ export async function generateMetadata({
       categoryName,
     ].join(", "),
     openGraph: {
-      title: `${categoryName} Emojis - ${emojiCount}+ Emojis Available`,
-      description: `Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. Copy emojis instantly!`,
+      title: `${categoryName} emojis — ${emojiCount}+ | ${SITE_NAME}`,
+      description: `Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. One-click copy on ${SITE_NAME}.`,
       type: "website",
-      url: `https://emojikart.com/${category}`,
+      url: `${SITE_URL}/${category}`,
+      siteName: `${SITE_NAME} — Free online emoji keyboard`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${categoryName} Emojis - ${emojiCount}+ Emojis`,
-      description: `Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. Copy emojis instantly!`,
+      title: `${categoryName} emojis — ${emojiCount}+ | ${SITE_NAME}`,
+      description: `Browse ${emojiCount}+ ${categoryName.toLowerCase()} emojis. One-click copy.`,
     },
     alternates: {
-      canonical: `https://emojikart.com/${category}`,
+      canonical: `${SITE_URL}/${category}`,
     },
   };
 }

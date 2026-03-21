@@ -233,6 +233,14 @@ export function EmojiKeyboardClient() {
   }, [pathname]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q?.trim()) {
+      setSearchQuery(q.trim());
+    }
+  }, []);
+
+  useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
     } else {

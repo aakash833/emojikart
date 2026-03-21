@@ -19,6 +19,8 @@ import { EmojiCopyButton } from "@/components/emoji-copy-button";
 import { PlatformEmojiCard } from "@/components/platform-emoji-card";
 import { getUnicodeCode, getPlatformVariations } from "@/lib/emoji-utils";
 import Link from "next/link";
+import Script from "next/script";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -38,13 +40,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!emoji) {
     return {
-      title: "Emoji Not Found | Emoji Keyboard",
+      title: `Emoji not found | ${SITE_NAME}`,
     };
   }
 
   const displayName = emoji.description || emoji.name.replace(/_/g, " ");
-  const title = `${emoji.emoji} ${displayName} Emoji - Copy & Paste | Emoji Keyboard`;
-  const description = `Copy and paste ${displayName} emoji ${emoji.emoji}. Find ${displayName} emoji meaning, Unicode info, and usage examples. Free emoji keyboard for ${displayName} emoji.`;
+  const title = `${emoji.emoji} ${displayName} emoji — copy & paste | ${SITE_NAME}`;
+  const description = `Copy and paste the ${displayName} emoji ${emoji.emoji}. Unicode code point, meaning, usage tips, and related emojis. Free ${SITE_NAME} emoji keyboard—no app required.`;
 
   return {
     title,
@@ -62,13 +64,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      type: "website",
+      type: "article",
+      url: `${SITE_URL}/emoji/${slug}`,
+      siteName: `${SITE_NAME} — Free online emoji keyboard`,
       images: [
         {
-          url: `https://emojikart.com/emoji/${slug}/opengraph-image`,
+          url: `${SITE_URL}/emoji/${slug}/opengraph-image`,
           width: 1200,
           height: 630,
-          alt: `${displayName} emoji`,
+          alt: `${displayName} emoji (${emoji.emoji}) — ${SITE_NAME}`,
         },
       ],
     },
@@ -76,10 +80,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [`https://emojikart.com/emoji/${slug}/opengraph-image`],
+      images: [`${SITE_URL}/emoji/${slug}/opengraph-image`],
     },
     alternates: {
-      canonical: `/emoji/${slug}`,
+      canonical: `${SITE_URL}/emoji/${slug}`,
     },
   };
 }
@@ -107,7 +111,55 @@ export default async function EmojiPage({ params }: Props) {
     .filter((e) => e.category === emoji.category && e.name !== emoji.name)
     .slice(0, 12);
 
+  const pageUrl = `${SITE_URL}/emoji/${slug}`;
+  const categoryPathUrl = `${SITE_URL}/${categorySlug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: `${displayName} emoji ${emoji.emoji}`,
+        description: `Copy and paste the ${displayName} emoji (${emoji.emoji}). Unicode and usage on ${SITE_NAME}.`,
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+        inLanguage: "en-US",
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: emoji.category,
+            item: categoryPathUrl,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: `${displayName} emoji`,
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
+    <>
+      <Script
+        id={`emoji-jsonld-${slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Breadcrumbs */}
@@ -385,5 +437,6 @@ export default async function EmojiPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   );
 }
