@@ -149,6 +149,11 @@ export default function Footer() {
                   Refund Policy
                 </Link>
               </li>
+              <li>
+                <Link href="/disclaimer" className="text-foreground/80 hover:text-foreground hover:underline transition-colors">
+                  Disclaimer
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

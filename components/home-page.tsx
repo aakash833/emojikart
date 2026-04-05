@@ -19,6 +19,7 @@ import {
   BookOpen,
   FileText,
   Image,
+  Shield,
 } from "lucide-react"
 import Link from "next/link"
 import { getFeaturedPosts } from "@/lib/blog-data"
@@ -230,6 +231,45 @@ export function HomePage({ onEmojiClick, copiedEmoji }: HomePageProps) {
           <div className="text-sm text-muted-foreground">Recent Copies</div>
         </div>
       </div>
+
+      <section className="rounded-2xl border border-border bg-card/60 p-6 md:p-8">
+        <div className="flex items-start gap-3 mb-2">
+          <Shield className="w-6 h-6 text-indigo-500 shrink-0 mt-1" aria-hidden />
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">
+              Editorial standards &amp; site policies
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              EmojiKart is a free Unicode emoji keyboard plus original guides on meanings, design tools, and messaging
+              etiquette. We maintain clear policies and contact options so visitors know who runs the site and how
+              information is used.
+            </p>
+            <nav aria-label="Policies and about" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+              <Link href="/about" className="text-primary hover:underline font-medium">
+                About us
+              </Link>
+              <Link href="/contact" className="text-primary hover:underline font-medium">
+                Contact
+              </Link>
+              <Link href="/blog" className="text-primary hover:underline font-medium">
+                Blog
+              </Link>
+              <Link href="/privacy-policy" className="text-primary hover:underline font-medium">
+                Privacy Policy
+              </Link>
+              <Link href="/terms-and-conditions" className="text-primary hover:underline font-medium">
+                Terms &amp; Conditions
+              </Link>
+              <Link href="/refund-policy" className="text-primary hover:underline font-medium">
+                Refund Policy
+              </Link>
+              <Link href="/disclaimer" className="text-primary hover:underline font-medium">
+                Disclaimer
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </section>
 
       {/* Recent Copied Emojis */}
       {recentEmojis.length > 0 && (

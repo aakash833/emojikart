@@ -21,6 +21,7 @@ import { getUnicodeCode, getPlatformVariations } from "@/lib/emoji-utils";
 import Link from "next/link";
 import Script from "next/script";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import Footer from "@/components/footer";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -431,11 +432,25 @@ export default async function EmojiPage({ params }: Props) {
                 >
                   About Us
                 </Link>
+                <Link
+                  href="/blog"
+                  className="block text-sm text-primary hover:underline"
+                >
+                  Emoji guides (blog)
+                </Link>
+                <Link
+                  href="/privacy-policy"
+                  className="block text-sm text-primary hover:underline"
+                >
+                  Privacy Policy
+                </Link>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
     </>
   );

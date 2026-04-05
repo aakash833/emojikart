@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { emojiData } from "@/lib/emoji-data"
+import { categoryDeepParagraphs, categoryFaqs } from "@/lib/category-deep-content"
 
 interface CategorySEOContentProps {
   category: string
@@ -116,6 +117,8 @@ export function CategorySEOContent({ category, slug }: CategorySEOContentProps) 
   const emojiCount = emojiData[category]?.length || 0
   const keywords = categoryKeywords[category] || []
   const related = relatedCategories[category] || []
+  const deepParagraphs = categoryDeepParagraphs[category] || []
+  const faqs = categoryFaqs[category] || []
 
   const categoryDescriptions: Record<string, string> = {
     "Smileys & Emotion": "Smileys and emotion emojis are the most popular category, allowing you to express a wide range of feelings and emotions. From happy faces 😊 to sad expressions 😢, from love hearts ❤️ to celebration emojis 🎉, these emojis help convey emotions that words alone cannot express. Perfect for social media posts, messages, and any communication where you want to add emotional context.",
@@ -162,6 +165,19 @@ export function CategorySEOContent({ category, slug }: CategorySEOContentProps) 
             <li>No account or registration required—completely free to use</li>
           </ul>
         </div>
+
+        {deepParagraphs.length > 0 && (
+          <div className="mt-6 space-y-4 border-t border-indigo-200/60 dark:border-indigo-800/60 pt-6">
+            <h3 className="text-xl font-semibold text-foreground">
+              How people use {category.toLowerCase()} emojis in 2026
+            </h3>
+            {deepParagraphs.map((para, i) => (
+              <p key={i} className="text-foreground leading-relaxed">
+                {para}
+              </p>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Popular Keywords */}
@@ -197,6 +213,35 @@ export function CategorySEOContent({ category, slug }: CategorySEOContentProps) 
               )
             })}
           </div>
+        </section>
+      )}
+
+      {faqs.length > 0 && (
+        <section className="rounded-xl border border-border bg-card/80 p-6">
+          <h3 className="text-xl font-semibold text-foreground mb-4">
+            Frequently asked questions — {category}
+          </h3>
+          <div className="space-y-3">
+            {faqs.map((item, i) => (
+              <details
+                key={i}
+                className="group rounded-lg border border-border/80 bg-background/60 px-4 py-3 open:bg-muted/30"
+              >
+                <summary className="cursor-pointer list-none font-medium text-foreground [&::-webkit-details-marker]:hidden flex items-center justify-between gap-2">
+                  <span>{item.q}</span>
+                  <span className="text-muted-foreground text-sm shrink-0 group-open:rotate-180 transition-transform">
+                    ▼
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed pl-0 border-t border-border/60 pt-3">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground mt-4">
+            For individual characters, open any emoji to read meaning notes, copy shortcuts, and related picks in the same family.
+          </p>
         </section>
       )}
     </div>

@@ -1,16 +1,7 @@
-export interface BlogPost {
-  slug: string;
-  title: string;
-  description: string;
-  content: string;
-  author: string;
-  publishedDate: string;
-  readTime: number;
-  category: string;
-  tags: string[];
-  featured: boolean;
-  image?: string;
-}
+import type { BlogPost } from "./blog-types";
+import { blogPosts2026 } from "./blog-posts-2026";
+
+export type { BlogPost } from "./blog-types";
 
 export const blogPosts: BlogPost[] = [
   {
@@ -2365,6 +2356,7 @@ The key to understanding this trend is recognizing that emojis have transcended 
     tags: ["trends", "merchandise", "culture", "market", "consumer behavior"],
     featured: true,
   },
+  ...blogPosts2026,
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {

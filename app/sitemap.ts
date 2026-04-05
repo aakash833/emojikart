@@ -3,6 +3,7 @@ import { emojiData } from "@/lib/emoji-data";
 import { getAllEmojis } from "@/lib/get-all-emojis";
 import { getTrendingGiphyGIFs } from "@/lib/giphy-api";
 import { SITE_URL } from "@/lib/site";
+import { blogPosts } from "@/lib/blog-data";
 
 const categorySlugs: Record<string, string> = {
   "smileys-emotion": "Smileys & Emotion",
@@ -25,6 +26,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.9,
+  }));
+
+  const categoryLongformPages = Object.keys(categorySlugs).map((slug) => ({
+    url: `${baseUrl}/category/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.88,
   }));
 
   // Individual emoji pages
@@ -52,24 +60,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: page.priority,
   }));
 
-  // Blog posts (high priority for SEO and content)
-  const blogPosts = [
-    { url: `${baseUrl}/blog/complete-guide-to-emoji-meanings-2025`, priority: 0.9 },
-    { url: `${baseUrl}/blog/best-emoji-combinations-for-social-media`, priority: 0.9 },
-    { url: `${baseUrl}/blog/emoji-trends-2025-whats-hot`, priority: 0.9 },
-    { url: `${baseUrl}/blog/how-to-use-emojis-in-professional-communication`, priority: 0.85 },
-    { url: `${baseUrl}/blog/emoji-psychology-why-we-love-emojis`, priority: 0.85 },
-    { url: `${baseUrl}/blog/emoji-etiquette-dos-and-donts`, priority: 0.85 },
-    { url: `${baseUrl}/blog/emoji-history-evolution-of-digital-expression`, priority: 0.85 },
-    { url: `${baseUrl}/blog/emoji-marketing-how-brands-use-emojis`, priority: 0.85 },
-    { url: `${baseUrl}/blog/emoji-accessibility-making-digital-communication-inclusive`, priority: 0.85 },
-    { url: `${baseUrl}/blog/best-emoji-gifts-for-friends-and-family`, priority: 0.9 },
-    { url: `${baseUrl}/blog/why-emoji-merchandise-is-trending`, priority: 0.9 },
-  ].map((post) => ({
-    url: post.url,
-    lastModified: new Date(),
+  // Blog posts — synced with lib/blog-data.ts
+  const blogSitemapEntries: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.publishedDate),
     changeFrequency: "monthly" as const,
-    priority: post.priority as 0.9 | 0.85,
+    priority: post.featured ? 0.9 : 0.85,
   }));
 
   // Required pages
@@ -77,6 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/privacy-policy`, priority: 0.5 },
     { url: `${baseUrl}/terms-and-conditions`, priority: 0.5 },
     { url: `${baseUrl}/refund-policy`, priority: 0.5 },
+    { url: `${baseUrl}/disclaimer`, priority: 0.5 },
     { url: `${baseUrl}/contact`, priority: 0.6 },
     { url: `${baseUrl}/about`, priority: 0.6 },
   ].map((page) => ({
@@ -110,8 +107,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     ...featurePages,
-    ...blogPosts,
+    ...blogSitemapEntries,
     ...categoryPages,
+    ...categoryLongformPages,
     ...requiredPages,
     ...gifPages, // Individual GIF pages
     ...emojiPages.slice(0, 1000), // Limit to first 1000 for performance, Google will crawl more

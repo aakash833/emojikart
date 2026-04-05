@@ -14,6 +14,7 @@ import Script from "next/script";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CategorySEOContent } from "@/components/category-seo-content";
 import { EmojiTooltip } from "@/components/emoji-tooltip";
+import Footer from "@/components/footer";
 
 type EmojiSize = "S" | "M" | "L" | "XL" | "XXL";
 
@@ -223,6 +224,8 @@ export function EmojiCategoryPage({ category, slug }: EmojiCategoryPageProps) {
               <p className="text-muted-foreground text-lg">No emojis found</p>
             </div>
           )}
+
+          <Footer />
         </main>
 
         {/* Copy Popup */}

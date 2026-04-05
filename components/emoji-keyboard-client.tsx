@@ -32,6 +32,12 @@ import {
   TrendingUp,
   Image,
   Zap,
+  Shield,
+  UserRound,
+  Mail,
+  FileText,
+  RefreshCw,
+  AlertCircle,
 } from "lucide-react";
 import Script from "next/script";
 import Link from "next/link";
@@ -42,6 +48,7 @@ import { HomePage } from "@/components/home-page";
 import { EmojiTooltip } from "@/components/emoji-tooltip";
 import { AdBanner } from "@/components/ad-banner";
 import Footer from "@/components/footer";
+import { CategorySEOContent } from "@/components/category-seo-content";
 import dynamic from "next/dynamic";
 const AdUnit = dynamic(() => import("../components/ad-unit"), {
   ssr: false,
@@ -77,6 +84,9 @@ const TermsAndConditionsClient = dynamic(() =>
 );
 const RefundPolicyClient = dynamic(() =>
   import("../components/refund-policy-client").then((m) => ({ default: m.RefundPolicyClient })),
+);
+const DisclaimerPageClient = dynamic(() =>
+  import("../components/disclaimer-page-client").then((m) => ({ default: m.DisclaimerPageClient })),
 );
 
 type EmojiSize = "S" | "M" | "L" | "XL" | "XXL";
@@ -667,6 +677,47 @@ export function EmojiKeyboardClient() {
                 </nav>
               </div>
 
+              <div>
+                <h2 className="text-xs font-bold text-muted-foreground mb-4 uppercase tracking-wider flex items-center gap-2">
+                  <Shield className="w-3.5 h-3.5" />
+                  Trust &amp; info
+                </h2>
+                <nav className="space-y-2">
+                  {(
+                    [
+                      ["/about", "About us", UserRound],
+                      ["/contact", "Contact", Mail],
+                      ["/privacy-policy", "Privacy Policy", Shield],
+                      ["/terms-and-conditions", "Terms & Conditions", FileText],
+                      ["/refund-policy", "Refund Policy", RefreshCw],
+                      ["/disclaimer", "Disclaimer", AlertCircle],
+                    ] as const
+                  ).map(([href, label, Icon]) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        startTransition(() => {
+                          router.replace(href, { scroll: false });
+                        });
+                        setSidebarOpen(false);
+                      }}
+                      className={cn(
+                        "cursor-pointer w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300",
+                        "hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950/30 dark:hover:to-purple-950/30",
+                        "hover:border-indigo-200 dark:hover:border-indigo-800 border border-transparent",
+                        pathname === href && "bg-indigo-100 dark:bg-indigo-900/30"
+                      )}
+                    >
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span>{label}</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
               {/* Categories Section - Modern Design */}
               <div>
                 <h2 className="text-xs font-bold text-muted-foreground mb-4 uppercase tracking-wider flex items-center gap-2">
@@ -904,8 +955,25 @@ export function EmojiKeyboardClient() {
                 <TermsAndConditionsClient />
               ) : pathname === "/refund-policy" ? (
                 <RefundPolicyClient />
+              ) : pathname === "/disclaimer" ? (
+                <DisclaimerPageClient />
               ) : (
                 <>
+                  {(() => {
+                    const pathSlug = (pathname || "").replace(/^\//, "") || "";
+                    const showCategoryEditorial = Boolean(
+                      selectedCategory &&
+                        !searchQuery &&
+                        pathSlug &&
+                        slugToCategory[pathSlug]
+                    );
+                    return showCategoryEditorial ? (
+                      <CategorySEOContent
+                        category={selectedCategory!}
+                        slug={pathSlug}
+                      />
+                    ) : null;
+                  })()}
                   {/* Sticky Category Header */}
                   {!searchQuery && (
                     <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 -mt-6 pt-6 pb-4 mb-4 border-b border-border">
